@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Congregação Nova · Testemunho público</title>
+<meta name="description" content="Escala de testemunho público com carrinhos da Congregação Nova: turnos da semana, inscrição em dupla, onde está cada carrinho.">
+<meta name="theme-color" content="#1f6f8b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Testemunho">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f6f8b'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle'%3E📚%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Congregação Nova: escala de testemunho público com carrinhos. Sem login:
+   a porta é um código simples, conferido no servidor (Supabase, função
+   cn_estado/cn_acao). Quem passou pela porta escolhe o próprio nome uma vez;
+   fica gravado só neste aparelho. Tudo que mexe na escala vai pro banco. */
+:root{--bg:#f5f2ec;--sur:#ffffff;--ink:#1b2430;--dim:#5f6b78;--faint:#6b7783;--line:#e6e1d8;--acc:#1f6f8b;--acc-soft:#e3f0f4;--ok:#22734a;--ok-soft:#e4f3ea;--warn:#8a5f0c;--warn-soft:#fbf1dc;--bad:#c44536;--bad-soft:#f9e4e1;--r:16px;--font:'Inter',ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+[hidden]{display:none!important}
+body.busy .btn,body.busy .turno,body.busy .opt{opacity:.6;pointer-events:none}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;background:var(--bg);position:relative;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+@media(min-width:600px){body{background:#e9e4da url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23d8d1c4'/%3E%3C/svg%3E")}.app{box-shadow:0 0 0 1px var(--line),0 20px 60px rgba(27,36,48,.12)}.nav{max-width:480px;margin:0 auto}}
+.top{position:sticky;top:0;z-index:5;background:rgba(245,242,236,.92);backdrop-filter:blur(10px);padding:14px 18px 10px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line)}
+.top .t{flex:1;min-width:0}
+.top .t b{display:block;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .t span{display:block;font-size:13px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sem{display:inline-flex;align-items:center;border-radius:999px;background:var(--acc-soft);color:var(--acc);font-size:12.5px;font-weight:600;min-height:34px}
+.sem button{min-width:34px;min-height:34px;font-size:18px;display:grid;place-items:center}
+.sem span{padding:0 2px;white-space:nowrap}
+.av{width:36px;height:36px;border-radius:50%;background:var(--acc-soft);color:var(--acc);font-weight:600;font-size:13px;display:grid;place-items:center;flex:none;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.av.s{width:28px;height:28px;font-size:11px}
+.av.x{background:#fff;color:var(--faint);border-style:dashed;border-color:var(--faint)}
+.avs{display:flex}
+.avs .av{margin-left:-8px}
+.avs .av:first-child{margin-left:0}
+main{padding:16px 18px 8px}
+h1{font-size:22px;font-weight:700;margin:6px 0 4px;letter-spacing:-.01em}
+h2{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:22px 0 10px}
+p{margin:0 0 10px}
+.dim{color:var(--dim)}
+.small{font-size:13px}
+.card{background:var(--sur);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.row{display:flex;align-items:center;gap:12px}
+.row .grow{flex:1;min-width:0}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;border-radius:999px;padding:6px 10px;min-height:32px;background:var(--acc-soft);color:var(--acc);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.ghost{background:transparent;border:1px dashed var(--faint);color:var(--dim)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 18px;border-radius:14px;background:var(--acc);color:#fff;font-weight:600;font-size:15px;width:100%;transition:transform .08s;text-decoration:none}
+.btn:active{transform:scale(.98)}
+.btn.sec{background:var(--acc-soft);color:var(--acc)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn.danger{background:var(--bad-soft);color:var(--bad)}
+.btn.sm{min-height:40px;font-size:14px;padding:0 14px;width:auto}
+.btn.wa{background:#1f8a4c}
+.btns{display:flex;gap:10px;margin-top:12px}
+.btns .btn{flex:1}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 0 6px;margin:0 -18px;padding-left:18px;padding-right:18px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:38px;padding:0 14px;border-radius:999px;background:var(--sur);border:1px solid var(--line);font-size:14px;font-weight:500;display:inline-flex;align-items:center;gap:8px}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip .dot{width:8px;height:8px;border-radius:50%}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:10px 0 16px}
+.day{background:var(--sur);border:1px solid var(--line);border-radius:12px;padding:8px 0 6px;text-align:center;min-height:62px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.day span{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.day b{font-size:17px;font-weight:600}
+.day i{font-style:normal;font-size:12px;color:var(--faint)}
+.day.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.day.on span,.day.on i{color:rgba(255,255,255,.7)}
+.day.today b{color:var(--acc)}
+.day.on.today b{color:#fff;text-decoration:underline}
+.day.gap::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--warn);margin-top:2px}
+.turno{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line);width:100%;text-align:left}
+.turno:first-of-type{border-top:0}
+.turno .h{width:52px;flex:none;font-weight:600;font-size:15px;line-height:1.2}
+.turno .h small{display:block;font-size:12px;color:var(--faint);font-weight:500}
+.turno .who{flex:1;min-width:0}
+.turno .who .n{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.turno .who .n b{font-weight:600}
+.turno.off{opacity:.55}
+.turno.off .h{text-decoration:line-through}
+.loc-head{display:flex;align-items:center;gap:10px;margin:18px 0 6px}
+.loc-head .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:18px;color:#fff}
+.loc-head b{font-size:15px;font-weight:600;display:block}
+.loc-head span{font-size:12.5px;color:var(--dim)}
+.loc-head .cart{margin-left:auto}
+.cart{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:3px 8px;border-radius:8px;background:#fff;border:1px solid var(--line);color:var(--dim)}
+.tile{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile .card{margin:0;padding:14px}
+.tile b{font-size:24px;font-weight:700;display:block;letter-spacing:-.02em}
+.tile span{font-size:12.5px;color:var(--dim)}
+.opt{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--line);border-radius:var(--r);background:var(--sur);margin-bottom:10px;width:100%;text-align:left}
+.opt .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;color:#fff;flex:none}
+.opt b{display:block;font-size:16px;font-weight:600}
+.opt span{display:block;font-size:13px;color:var(--dim)}
+.opt .arr{margin-left:auto;color:var(--faint);font-size:20px}
+.opt.on{border-color:var(--acc);background:var(--acc-soft)}
+.steps{display:flex;gap:6px;margin:4px 0 14px}
+.steps i{flex:1;height:4px;border-radius:2px;background:var(--line)}
+.steps i.on{background:var(--acc)}
+.list .item{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.list .item:first-child{border-top:0}
+.list .item b{font-weight:600;font-size:15px;display:block}
+.list .item span{font-size:13px;color:var(--dim);display:block}
+.mini{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.mini .btn{width:auto;min-height:40px;font-size:13px;padding:0 12px}
+.rule{display:flex;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
+.rule:first-child{border-top:0}
+.rule .k{font-size:20px;flex:none;width:28px;text-align:center}
+.notice{background:var(--warn-soft);border:1px solid #f0d9a8;border-radius:12px;padding:12px 14px;font-size:14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start}
+.notice.ok{background:var(--ok-soft);border-color:#bfe3cb}
+.tag{font-size:12px;font-weight:600;color:var(--warn)}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:10;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:6px 6px calc(8px + env(safe-area-inset-bottom))}
+.nav a{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0 2px;font-size:12px;font-weight:500;color:var(--dim);text-decoration:none;border-radius:12px}
+.nav a .i{font-size:20px;line-height:1}
+.nav a.on{color:var(--acc)}
+.nav a.main .i{width:44px;height:44px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;margin-top:-22px;box-shadow:0 8px 20px rgba(31,111,139,.35);border:3px solid #fff;font-size:24px}
+.nav a.main{color:var(--acc)}
+.sheet-bg{position:fixed;inset:0;background:rgba(27,36,48,.45);z-index:20;opacity:0;pointer-events:none;transition:opacity .2s}
+.sheet-bg.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;background:var(--sur);border-radius:22px 22px 0 0;padding:10px 18px calc(18px + env(safe-area-inset-bottom));max-height:88dvh;overflow-y:auto;transform:translateY(105%);transition:transform .25s cubic-bezier(.2,.8,.2,1);max-width:480px;margin:0 auto}
+.sheet.open{transform:none}
+.sheet .grab{width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 14px}
+.sheet h3{margin:0 0 2px;font-size:18px;font-weight:700;line-height:1.25}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;font-size:14px;z-index:30;opacity:0;transition:.25s;max-width:calc(100% - 36px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.hero{background:linear-gradient(135deg,var(--acc),#155a72);color:#fff;border-radius:20px;padding:18px;margin:8px 0 14px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.08)}
+.hero .k{font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.9}
+.hero b{display:block;font-size:24px;font-weight:700;margin:4px 0 2px;letter-spacing:-.01em}
+.hero p{opacity:.9;font-size:14px;margin:0}
+.hero .btns .btn{background:#fff;color:var(--acc)}
+.hero .btns .btn.ghost{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.35)}
+.foot{padding:20px 18px 8px;font-size:12.5px;color:var(--faint);text-align:center;line-height:1.5}
+/* porta */
+.porta{position:fixed;inset:0;z-index:50;background:linear-gradient(160deg,#1f6f8b,#143f52);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center}
+.porta .logo{width:76px;height:76px;border-radius:24px;background:rgba(255,255,255,.14);display:grid;place-items:center;font-size:38px;margin-bottom:18px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.porta h1{font-size:24px;margin:0 0 4px;color:#fff}
+.porta p{opacity:.85;font-size:15px;margin:0 0 28px;max-width:30ch}
+.caixas{display:flex;gap:12px;margin-bottom:14px}
+.caixa{width:56px;height:68px;border-radius:16px;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.35);display:grid;place-items:center;font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;transition:.15s}
+.caixa.on{border-color:#fff;background:rgba(255,255,255,.22)}
+.porta input{position:absolute;opacity:0;width:1px;height:1px;left:-9999px}
+.porta .msg{min-height:22px;font-size:14px;color:#ffd9d3;font-weight:500}
+.porta .dica{position:absolute;bottom:calc(20px + env(safe-area-inset-bottom));font-size:12.5px;opacity:.6}
+.shake{animation:shake .4s}
+@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.carregando{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:var(--bg);color:var(--dim);font-size:14px}
+/* formulários */
+.f{display:flex;flex-direction:column;gap:6px;margin:12px 0}
+.f label{font-size:13px;font-weight:600;color:var(--dim)}
+.f input[type=text],.f input[type=number],.f input[type=tel],.f input[type=url],.f textarea,.f select{font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);width:100%;min-height:48px}
+.f textarea{min-height:72px;resize:vertical}
+.f input[type=color]{width:56px;height:40px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:2px}
+.chk{display:flex;align-items:center;gap:12px;font-size:15px;padding:10px 0;font-weight:500}
+.chk input{width:24px;height:24px;accent-color:var(--acc)}
+.dias7{display:flex;gap:5px}
+.dias7 label{flex:1;text-align:center;border:1px solid var(--line);border-radius:10px;padding:9px 0;font-size:13px;background:#fff;font-weight:600;color:var(--dim)}
+.dias7 label.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.dias7 input{display:none}
+.pessoa{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff;margin-bottom:8px;font-size:16px;font-weight:500}
+@media print{.nav,.top,.foot,.sheet-bg,.sheet,.porta{display:none}.app{padding:0;max-width:none}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="porta" id="porta" hidden>
+  <div class="logo">📚</div>
+  <h1 id="portaTitulo">Congregação Nova</h1>
+  <p>Testemunho público com carrinhos. Digite o código da porta.</p>
+  <div class="caixas" id="caixas"><div class="caixa"></div><div class="caixa"></div><div class="caixa"></div><div class="caixa"></div></div>
+  <div class="msg" id="portaMsg"></div>
+  <input id="portaInput" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="one-time-code" aria-label="Código da porta">
+  <div class="dica">Quem não tem o código pede no grupo da congregação.</div>
+</div>
+<div class="carregando" id="carregando">Abrindo a escala…</div>
+<div class="app" id="app" hidden>
+  <header class="top">
+    <button class="av" id="topAv" aria-label="Quem sou eu">?</button>
+    <div class="t"><b id="topTitle">Congregação Nova</b><span id="topSub">Testemunho público</span></div>
+    <div class="sem" id="semNav"><button data-sem="-1" aria-label="Semana anterior">‹</button><span id="semLabel">esta semana</span><button data-sem="1" aria-label="Próxima semana">›</button></div>
+  </header>
+  <main id="view"></main>
+  <footer class="foot" id="foot"></footer>
+</div>
+<nav class="nav" id="nav" aria-label="principal" hidden>
+  <a href="#hoje" data-r="hoje"><span class="i">☀️</span>Hoje</a>
+  <a href="#agenda" data-r="agenda"><span class="i">🗓️</span>Agenda</a>
+  <a href="#inscrever" data-r="inscrever" class="main"><span class="i">+</span>Inscrever</a>
+  <a href="#meus" data-r="meus"><span class="i">🙋</span>Meus</a>
+  <a href="#mais" data-r="mais"><span class="i">☰</span>Mais</a>
+</nav>
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Detalhes"></div>
+<div class="toast" id="toast"></div>
+<script>
+// ---------- servidor (Supabase: só duas funções, ambas conferem o código da porta)
+const SB = { url: "https://bgdglhisuztjdqkmkvpq.supabase.co/rest/v1/rpc/", key: "sb_publishable_Gp1BOv4HU9N7Zc2iKspojA_vP4816V6" };
+const LS = { senha: "cn:senha", eu: "cn:eu" };
+const ls = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} }, del: (k) => { try { localStorage.removeItem(k); } catch {} } };
+
+async function rpc(fn, body) {
+  let r;
+  try { r = await fetch(SB.url + fn, { method: "POST", headers: { apikey: SB.key, "Content-Type": "application/json" }, body: JSON.stringify(body) }); }
+  catch { throw Object.assign(new Error("Sem internet agora. Tenta de novo."), { code: "rede" }); }
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw Object.assign(new Error(j.message || `Erro ${r.status}`), { code: j.code });
+  return j;
+}
+
+// ---------- estado
+const DIAS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+const DIAS_L = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
+const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const deIso = (s) => new Date(s + "T12:00:00");
+const segunda = (d) => { const x = new Date(d); x.setHours(12, 0, 0, 0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return iso(x); };
+const somaDias = (s, n) => { const d = deIso(s); d.setDate(d.getDate() + n); return iso(d); };
+
+let S = null;                       // último estado vindo do servidor
+let semana = segunda(new Date());   // segunda-feira da semana mostrada (YYYY-MM-DD)
+let EU = null;                      // publicador deste aparelho
+let turnos = [];
+const hoje = () => new Date();
+const semanaAtual = () => semana === segunda(hoje());
+const dataDo = (dow) => deIso(somaDias(semana, (dow + 6) % 7));
+const fmtD = (d) => d.getDate();
+const senha = () => ls.get(LS.senha) || "";
+const cfg = () => S.config;
+const R = () => cfg().regras || { min_por_turno: 2, max_por_turno: 3, max_por_semana: 3, cancelar_ate_horas: 2 };
+const pub = (id) => S.publicadores.find((p) => p.id === id);
+const local = (id) => (cfg().locais || []).find((l) => l.id === id);
+const cart = (id) => (cfg().carrinhos || []).find((c) => c.id === id);
+const iniciais = (nome) => nome.trim().split(/\s+/).map((x) => x[0]).slice(0, 2).join("").toUpperCase();
+const hh = () => `${String(hoje().getHours()).padStart(2, "0")}:00`;
+
+function montarTurnos() {
+  turnos = [];
+  for (const l of cfg().locais || []) for (const dia of l.dias || []) for (const h of l.horas || []) {
+    const quem = S.inscricoes.filter((i) => i.local === l.id && i.dia === dia && i.hora === h).map((i) => i.publicador_id).filter((id) => pub(id));
+    const canc = S.cancelamentos.find((c) => c.local === l.id && c.dia === dia && c.hora === h);
+    const dur = l.duracao || 2;
+    turnos.push({ id: `${l.id}-${dia}-${h}`, local: l.id, dia, hora: h, fim: `${String(parseInt(h) + dur).padStart(2, "0")}:${h.slice(3)}`, duracao: dur, quem, cancelado: canc ? canc.motivo || "cancelado" : null });
+  }
+  turnos.sort((a, b) => a.dia - b.dia || a.hora.localeCompare(b.hora));
+}
+function aplicar(estado) {
+  S = estado; semana = S.semana; montarTurnos();
+  EU = pub(ls.get(LS.eu)) || null;
+  $("#topTitle").textContent = cfg().congregacao || "Congregação";
+  $("#portaTitulo").textContent = cfg().congregacao || "Congregação";
+  $("#topAv").textContent = EU ? iniciais(EU.nome) : "?";
+  $("#foot").innerHTML = `${esc(cfg().congregacao || "")} · testemunho público com carrinhos · ${S.publicadores.length} publicadores cadastrados`;
+  render();
+  if (!EU) quemSouEu();
+}
+
+async function carregar(sem = semana) {
+  busy(true);
+  try { aplicar(await rpc("cn_estado", { p_senha: senha(), p_semana: sem })); }
+  catch (e) { if (e.code === "28000") { ls.del(LS.senha); porta("O código mudou. Digite o novo."); } else toast("⚠️ " + e.message); }
+  finally { busy(false); }
+}
+async function acao(nome, p = {}) {
+  busy(true);
+  try { const r = await rpc("cn_acao", { p_senha: senha(), p_acao: nome, p: { semana, ...p } }); aplicar(r); return r; }
+  catch (e) { if (e.code === "28000") { ls.del(LS.senha); porta("O código mudou. Digite o novo."); } toast("⚠️ " + e.message); throw e; }
+  finally { busy(false); }
+}
+function busy(on) { document.body.classList.toggle("busy", on); }
+
+// ---------- porta
+function porta(msg = "") {
+  $("#carregando").hidden = true; $("#app").hidden = true; $("#nav").hidden = true;
+  $("#porta").hidden = false; $("#portaMsg").textContent = msg; $("#portaInput").value = ""; pintarCaixas("");
+  setTimeout(() => $("#portaInput").focus(), 50);
+}
+function pintarCaixas(v) { [...$("#caixas").children].forEach((c, i) => { c.textContent = v[i] ? "•" : ""; c.classList.toggle("on", !!v[i]); }); }
+$("#portaInput").addEventListener("input", (e) => {
+  const v = e.target.value.replace(/\D/g, "").slice(0, 8); e.target.value = v; pintarCaixas(v); $("#portaMsg").textContent = "";
+  if (v.length === 4) tentar(v);
+});
+$("#portaInput").addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.value.length >= 4) tentar(e.target.value); });
+$("#caixas").addEventListener("click", () => $("#portaInput").focus());
+async function tentar(codigo) {
+  try {
+    const r = await rpc("cn_estado", { p_senha: codigo, p_semana: semana });
+    ls.set(LS.senha, codigo); entrarNoApp(r);
+  } catch (e) {
+    $("#caixas").classList.remove("shake"); void $("#caixas").offsetWidth; $("#caixas").classList.add("shake");
+    $("#portaMsg").textContent = e.code === "28000" ? "Código errado. Tenta de novo." : e.message;
+    $("#portaInput").value = ""; pintarCaixas(""); $("#portaInput").focus();
+  }
+}
+function entrarNoApp(estado) { $("#porta").hidden = true; $("#carregando").hidden = true; $("#app").hidden = false; $("#nav").hidden = false; aplicar(estado); }
+
+// ---------- quem sou eu (sem login: escolhe o nome uma vez, fica neste aparelho)
+function quemSouEu() {
+  const lista = S.publicadores.map((p) => `<button class="pessoa" data-eu="${p.id}"><span class="av">${iniciais(p.nome)}</span><span>${esc(p.nome)}${p.responsavel ? " <small class=\"dim\">🔑</small>" : ""}</span></button>`).join("");
+  abrirSheet(`<h3>Quem é você?</h3><p class="dim small">Escolha seu nome uma vez. Fica só neste aparelho.</p>
+    <div style="margin:14px 0">${lista || `<p class="dim">Ninguém cadastrado ainda. Você é o primeiro.</p>`}</div>
+    <button class="btn ghost" data-form="novo-eu">＋ Meu nome não está aqui</button>`, true);
+}
+function formNovoEu() {
+  formulario({ titulo: "Seu nome", campos: [{ k: "nome", label: "Como você é chamado na congregação", tipo: "text", ph: "Ex.: Ana Paula M." }, { k: "responsavel", label: "Tenho a chave do carrinho (responsável)", tipo: "checkbox" }], valores: {}, lock: true,
+    salvar: async (v) => { if (!v.nome || v.nome.trim().length < 2) return toast("Escreve o nome"); const r = await acao("publicador_salvar", { nome: v.nome, responsavel: !!v.responsavel }); ls.set(LS.eu, r.novo_id); EU = pub(r.novo_id); $("#topAv").textContent = iniciais(EU.nome); fechar(true); render(); toast(`Bem-vindo, ${EU.nome.split(" ")[0]} 👋`); } });
+}
+
+// ---------- ajudantes de tela
+const status = (t) => t.cancelado ? { k: "bad", txt: "Cancelado" } : t.quem.length === 0 ? { k: "warn", txt: "Vago" } : t.quem.length < R().min_por_turno ? { k: "warn", txt: `Falta ${R().min_por_turno - t.quem.length}` } : t.quem.length >= R().max_por_turno ? { k: "ok", txt: "Cheio" } : { k: "ok", txt: "Completo" };
+const temResp = (t) => t.quem.some((id) => pub(id)?.responsavel);
+const meusTurnos = () => EU ? turnos.filter((t) => t.quem.includes(EU.id) && !t.cancelado) : [];
+const avatars = (t) => `<div class="avs">${t.quem.map((id) => `<div class="av s" title="${esc(pub(id).nome)}">${iniciais(pub(id).nome)}</div>`).join("")}${t.quem.length < R().min_por_turno && !t.cancelado ? `<div class="av s x">?</div>` : ""}</div>`;
+const nomes = (t) => t.quem.length ? t.quem.map((id) => `<b>${esc(pub(id).nome)}</b>${pub(id).responsavel ? " 🔑" : ""}`).join(", ") : `<span class="dim">ninguém ainda</span>`;
+const wa = (texto, num) => `https://wa.me/${num || ""}?text=${encodeURIComponent(texto)}`;
+const gaps = () => turnos.filter((t) => !t.cancelado && t.quem.length < R().min_por_turno);
+const quando = (t) => `${DIAS_L[t.dia]} ${fmtD(dataDo(t.dia))} ${MESES[dataDo(t.dia).getMonth()]} · ${t.hora}–${t.fim}`;
+const semLabel = () => { const a = deIso(semana), b = deIso(somaDias(semana, 6)); return semanaAtual() ? "esta semana" : `${fmtD(a)} ${MESES[a.getMonth()]} – ${fmtD(b)} ${MESES[b.getMonth()]}`; };
+const passouTurno = (t) => semanaAtual() ? (t.dia === 0 ? 7 : t.dia) < (hoje().getDay() === 0 ? 7 : hoje().getDay()) || ((t.dia === hoje().getDay()) && t.fim <= hh()) : semana < segunda(hoje());
+
+// ---------- telas
+function telaHoje() {
+  const meus = meusTurnos().filter((t) => !passouTurno(t));
+  const prox = meus[0];
+  const dow = hoje().getDay();
+  const doDia = semanaAtual() ? turnos.filter((t) => t.dia === dow && !t.cancelado) : [];
+  let h = `<h1>Olá, ${esc(EU ? EU.nome.split(" ")[0] : "")} 👋</h1><p class="dim">${DIAS_L[dow]}, ${fmtD(hoje())} de ${MESES[hoje().getMonth()]} · ${meusTurnos().length} de ${R().max_por_semana} turnos ${semanaAtual() ? "esta semana" : "na semana mostrada"}</p>`;
+  if (prox) {
+    const l = local(prox.local), c = cart(l.carrinho);
+    const dupla = prox.quem.filter((id) => id !== EU.id).map((id) => pub(id).nome);
+    h += `<div class="hero"><div class="k">Seu próximo turno</div><b>${quando(prox)}</b><p>${l.icone} ${esc(l.nome)} · ${c ? esc(c.nome) : ""}${dupla.length ? ` · com ${esc(dupla.join(" e "))}` : " · <u>ainda sem dupla</u>"}</p>
+      <div class="btns"><a class="btn" href="${wa(`Oi! Confirmando nosso turno de testemunho público ${DIAS_L[prox.dia]} ${prox.hora} na ${l.nome}.${c && c.guardado ? ` Carrinho: ${c.guardado}.` : ""}`)}" target="_blank" rel="noopener">💬 Combinar</a><button class="btn ghost" data-open="${prox.id}">Detalhes</button></div></div>`;
+  } else {
+    h += `<div class="hero"><div class="k">${semanaAtual() ? "Esta semana" : semLabel()}</div><b>Você ainda não tem turno</b><p>Leva um minuto: escolhe o local, o dia e a hora.</p><div class="btns"><a class="btn" href="#inscrever">＋ Inscrever-me</a></div></div>`;
+  }
+  const faltando = gaps().filter((t) => !passouTurno(t));
+  if (faltando.length) {
+    h += `<h2>Precisa de gente <span class="tag">${faltando.length} turnos</span></h2><div class="card" style="padding:4px 16px">`;
+    for (const t of faltando.slice(0, 5)) { const l = local(t.local); h += `<div class="turno"><div class="h">${t.hora}<small>${DIAS[t.dia]} ${fmtD(dataDo(t.dia))}</small></div><div class="who"><div class="n">${l.icone} <b>${esc(l.apelido || l.nome)}</b> · ${nomes(t)}</div></div>${t.quem.includes(EU?.id) ? `<span class="pill ok">você</span>` : `<button class="btn sm sec" data-join="${t.id}">Eu vou</button>`}</div>`; }
+    h += `</div>`;
+  }
+  h += `<h2>Carrinhos agora</h2>`;
+  for (const c of cfg().carrinhos || []) {
+    const emUso = doDia.find((t) => local(t.local)?.carrinho === c.id && t.quem.length && t.hora <= hh() && t.fim > hh());
+    h += `<div class="card row"><div style="font-size:26px">📚</div><div class="grow"><b>${esc(c.nome)}</b><div class="small dim">${emUso ? `na ${esc(local(emUso.local).nome)} com ${esc(emUso.quem.map((id) => pub(id).nome.split(" ")[0]).join(" e "))} até ${emUso.fim}` : c.guardado ? `guardado: ${esc(c.guardado)}` : `<span class="dim">onde fica? Cadastre em Mais › Carrinhos</span>`}</div></div><span class="pill ${emUso ? "ok" : "ghost"}">${emUso ? "na rua" : "guardado"}</span></div>`;
+  }
+  h += `<h2>Hoje nos locais</h2>` + (doDia.length ? listaPorLocal(doDia) : `<div class="card dim">Hoje não há turnos previstos.</div>`);
+  h += `<div class="mini"><button class="btn ghost" data-problema="">⚠️ Algum problema no carrinho?</button></div>`;
+  return h;
+}
+
+function listaPorLocal(lista) {
+  let h = "";
+  for (const l of cfg().locais || []) {
+    const ts = lista.filter((t) => t.local === l.id);
+    if (!ts.length) continue;
+    h += `<div class="loc-head"><div class="ic" style="background:${esc(l.cor || "#1f6f8b")}">${l.icone || "📍"}</div><div><b>${esc(l.nome)}</b><span>${esc(l.janela || "")}</span></div><span class="cart">📚 ${esc(l.carrinho || "")}</span></div><div class="card" style="padding:4px 16px">`;
+    for (const t of ts) { const s = status(t); h += `<button class="turno${t.cancelado ? " off" : ""}" data-open="${t.id}"><div class="h">${t.hora}<small>${t.fim}</small></div>${avatars(t)}<div class="who"><div class="n">${t.cancelado ? `<span class="dim">cancelado · ${esc(t.cancelado)}</span>` : nomes(t)}</div></div><span class="pill ${s.k}">${s.txt}</span></button>`; }
+    h += `</div>`;
+  }
+  return h;
+}
+
+let agDia = null, agLocal = "todos";
+function telaAgenda() {
+  if (agDia === null) agDia = semanaAtual() ? hoje().getDay() : 1;
+  const dow = hoje().getDay();
+  let h = `<h1>Agenda</h1><div class="chips"><button class="chip${agLocal === "todos" ? " on" : ""}" data-loc="todos">Todos</button>${(cfg().locais || []).map((l) => `<button class="chip${agLocal === l.id ? " on" : ""}" data-loc="${l.id}"><span class="dot" style="background:${esc(l.cor || "#1f6f8b")}"></span>${esc(l.apelido || l.nome)}</button>`).join("")}</div>`;
+  h += `<div class="days">${[1, 2, 3, 4, 5, 6, 0].map((d) => { const ts = turnos.filter((t) => t.dia === d && (agLocal === "todos" || t.local === agLocal)); const g = ts.some((t) => !t.cancelado && t.quem.length < R().min_por_turno); return `<button class="day${agDia === d ? " on" : ""}${semanaAtual() && d === dow ? " today" : ""}${g ? " gap" : ""}" data-dia="${d}"><span>${DIAS[d]}</span><b>${fmtD(dataDo(d))}</b><i>${ts.length ? ts.length + " turnos" : "—"}</i></button>`; }).join("")}</div>`;
+  const lista = turnos.filter((t) => t.dia === agDia && (agLocal === "todos" || t.local === agLocal));
+  h += lista.length ? listaPorLocal(lista) : `<div class="card dim">Sem turnos ${DIAS_L[agDia]}${agLocal !== "todos" ? " neste local" : ""}.</div>`;
+  h += `<div class="mini"><a class="btn ghost" href="${wa(textoSemana())}" target="_blank" rel="noopener">💬 Mandar a semana no grupo</a><button class="btn ghost" onclick="window.print()">🖨️ Imprimir</button></div>`;
+  return h;
+}
+function textoSemana() {
+  const a = deIso(semana);
+  let s = `*Testemunho público · ${cfg().congregacao}*\n_semana de ${fmtD(a)} de ${MESES[a.getMonth()]}_\n`;
+  for (const d of [1, 2, 3, 4, 5, 6, 0]) { const ts = turnos.filter((t) => t.dia === d && !t.cancelado); if (!ts.length) continue; s += `\n*${DIAS_L[d]} ${fmtD(dataDo(d))}*\n`; for (const t of ts) s += `${t.hora} ${local(t.local).apelido || local(t.local).nome}: ${t.quem.length ? t.quem.map((id) => pub(id).nome).join(" e ") : "VAGO"}\n`; }
+  return s;
+}
+
+let insc = { local: null, dia: null };
+function telaInscrever() {
+  const passo = !insc.local ? 1 : insc.dia === null ? 2 : 3;
+  let h = `<h1>Inscrever-me</h1><div class="steps"><i class="on"></i><i class="${passo >= 2 ? "on" : ""}"></i><i class="${passo >= 3 ? "on" : ""}"></i></div>`;
+  if (!semanaAtual()) h += `<p class="dim small">Semana de ${semLabel()}. Troca a semana lá em cima se quiser outra.</p>`;
+  if (meusTurnos().length >= R().max_por_semana) h += `<div class="notice">⚠️ <div>Você já tem ${R().max_por_semana} turnos nesta semana, o máximo. Dá pra trocar um em <a href="#meus">Meus turnos</a>.</div></div>`;
+  if (passo === 1) {
+    h += `<p class="dim">Onde você quer ficar?</p>` + (cfg().locais || []).map((l) => { const vagas = turnos.filter((t) => t.local === l.id && !t.cancelado && !passouTurno(t) && t.quem.length < R().min_por_turno).length; return `<button class="opt" data-pick-local="${l.id}"><div class="ic" style="background:${esc(l.cor || "#1f6f8b")}">${l.icone || "📍"}</div><div><b>${esc(l.nome)}</b><span>${esc(l.janela || "")} · 📚 ${esc(l.carrinho || "")}</span>${vagas ? `<span class="tag">${vagas} turnos precisando de gente</span>` : ""}</div><span class="arr">›</span></button>`; }).join("");
+  } else if (passo === 2) {
+    const l = local(insc.local);
+    h += `<button class="opt on" data-pick-local=""><div class="ic" style="background:${esc(l.cor)}">${l.icone}</div><div><b>${esc(l.nome)}</b><span>trocar local</span></div><span class="arr">✎</span></button><p class="dim">Que dia?</p>`;
+    const dias = [...new Set(turnos.filter((t) => t.local === l.id).map((t) => t.dia))].sort((a, b) => (a || 7) - (b || 7));
+    h += `<div class="days" style="grid-template-columns:repeat(${Math.min(7, Math.max(1, dias.length))},1fr)">${dias.map((d) => { const ts = turnos.filter((t) => t.local === l.id && t.dia === d); const g = ts.some((t) => !t.cancelado && t.quem.length < R().min_por_turno); return `<button class="day${g ? " gap" : ""}" data-pick-dia="${d}"><span>${DIAS[d]}</span><b>${fmtD(dataDo(d))}</b><i>${ts.filter((t) => t.quem.length < R().max_por_turno && !t.cancelado).length} livres</i></button>`; }).join("")}</div>`;
+  } else {
+    const l = local(insc.local);
+    h += `<button class="opt on" data-pick-dia=""><div class="ic" style="background:${esc(l.cor)}">${l.icone}</div><div><b>${esc(l.nome)} · ${DIAS_L[insc.dia]} ${fmtD(dataDo(insc.dia))} ${MESES[dataDo(insc.dia).getMonth()]}</b><span>trocar dia</span></div><span class="arr">✎</span></button><p class="dim">Qual horário?</p><div class="card" style="padding:4px 16px">`;
+    for (const t of turnos.filter((t) => t.local === l.id && t.dia === insc.dia)) {
+      const s = status(t); const cheio = t.quem.length >= R().max_por_turno || t.cancelado; const ja = t.quem.includes(EU?.id);
+      h += `<div class="turno${t.cancelado ? " off" : ""}"><div class="h">${t.hora}<small>${t.fim}</small></div>${avatars(t)}<div class="who"><div class="n">${nomes(t)}</div></div>${ja ? `<span class="pill ok">você</span>` : cheio ? `<span class="pill ${s.k}">${s.txt}</span>` : `<button class="btn sm" data-join="${t.id}">Entrar</button>`}</div>`;
+    }
+    h += `</div>`;
+  }
+  return h;
+}
+
+function telaMeus() {
+  const meus = meusTurnos();
+  const noMes = EU ? (S.mes[EU.id] || 0) : 0;
+  let h = `<h1>Meus turnos</h1><p class="dim">${meus.length} de ${R().max_por_semana} ${semanaAtual() ? "esta semana" : "na semana de " + semLabel()}</p>`;
+  if (!meus.length) h += `<div class="card"><p>Nenhum turno nesta semana.</p><a class="btn" href="#inscrever">＋ Inscrever-me</a></div>`;
+  for (const t of meus) {
+    const l = local(t.local), c = cart(l.carrinho); const dupla = t.quem.filter((id) => id !== EU.id);
+    h += `<div class="card"><div class="row"><div style="width:44px;height:44px;border-radius:12px;background:${esc(l.cor)};display:grid;place-items:center;font-size:22px;color:#fff">${l.icone}</div><div class="grow"><b>${quando(t)}</b><div class="small dim">${esc(l.nome)}${c ? " · " + esc(c.nome) : ""}</div></div>${dupla.length ? avatars(t) : `<span class="pill warn">sem dupla</span>`}</div>
+      <div class="small dim" style="margin-top:8px">${dupla.length ? `Com ${esc(dupla.map((id) => pub(id).nome).join(" e "))}` : "Ainda ninguém com você. O grupo vai ver a vaga."}${!temResp(t) ? " · ⚠️ ninguém com a chave do carrinho" : ""}</div>
+      <div class="mini"><button class="btn sec" data-open="${t.id}">Detalhes</button><a class="btn ghost" href="${wa(`Alguém pode trocar comigo? Turno ${DIAS_L[t.dia]} ${t.hora} na ${l.nome}.`)}" target="_blank" rel="noopener">🔁 Pedir troca</a><button class="btn ghost" data-leave="${t.id}">Sair</button></div></div>`;
+  }
+  h += `<h2>Seu mês</h2><div class="tile"><div class="card"><b>${noMes}</b><span>turnos no mês</span></div><div class="card"><b>${noMes * 2}h</b><span>de carrinho</span></div></div>`;
+  return h;
+}
+
+function telaMais() {
+  const r = R(), ct = cfg().contato || {};
+  let h = `<h1>Mais</h1>`;
+  h += `<div class="card row"><div class="av">${EU ? iniciais(EU.nome) : "?"}</div><div class="grow"><b>${esc(EU ? EU.nome : "Sem nome")}</b><div class="small dim">${EU?.responsavel ? "🔑 tem a chave do carrinho" : "publicador"}</div></div><button class="btn sm ghost" data-trocar-eu="1">Trocar</button></div>`;
+  h += `<h2>Regras da congregação <button class="btn sm ghost" data-form="regras" style="margin-left:6px">Editar</button></h2><div class="card"><div class="rule"><span class="k">👥</span><div><b>${r.min_por_turno} por turno</b>, no máximo ${r.max_por_turno}. Ninguém fica sozinho no carrinho.</div></div><div class="rule"><span class="k">🔑</span><div><b>Um responsável por turno</b> pega e devolve o carrinho. Quem tem a chave aparece com 🔑.</div></div><div class="rule"><span class="k">📆</span><div><b>Até ${r.max_por_semana} turnos por semana</b> por pessoa, pra todo mundo participar.</div></div><div class="rule"><span class="k">⏰</span><div><b>Cancelar até ${r.cancelar_ate_horas}h antes.</b> Avise a dupla pelo WhatsApp.</div></div><div class="rule"><span class="k">🌧️</span><div><b>Chuva?</b> Qualquer um cancela o turno aqui e todo mundo vê.</div></div></div>`;
+  h += `<h2>Locais <button class="btn sm ghost" data-form="local" data-i="-1" style="margin-left:6px">＋ Adicionar</button></h2>` + (cfg().locais || []).map((l, i) => `<div class="card row"><div style="width:40px;height:40px;border-radius:10px;background:${esc(l.cor)};display:grid;place-items:center;font-size:20px;color:#fff">${l.icone}</div><div class="grow"><b>${esc(l.nome)}</b><div class="small dim">${esc(l.endereco || "sem endereço")}<br>${esc(l.janela || "")} · ${DIAS.filter((_, d) => (l.dias || []).includes(d)).join(", ")} · ${(l.horas || []).join(", ")} · 📚 ${esc(l.carrinho || "")}</div></div>${l.mapa ? `<a class="btn sm ghost" href="${esc(l.mapa)}" target="_blank" rel="noopener">Mapa</a>` : ""}<button class="btn sm ghost" data-form="local" data-i="${i}">✎</button></div>`).join("");
+  h += `<h2>Carrinhos <button class="btn sm ghost" data-form="carrinho" data-i="-1" style="margin-left:6px">＋ Adicionar</button></h2>` + (cfg().carrinhos || []).map((c, i) => `<div class="card"><div class="row"><span style="font-size:26px">📚</span><div class="grow"><b>${esc(c.nome)}</b><div class="small dim">Guardado: ${esc(c.guardado || "?")}</div></div><button class="btn sm ghost" data-form="carrinho" data-i="${i}">✎</button></div><div class="small dim" style="margin-top:8px">Responsável: ${esc(c.responsavel || "?")} · Leva: ${esc(c.publicacoes || "")}</div></div>`).join("");
+  h += `<h2>Publicadores <span class="tag">${S.publicadores.length}</span></h2><div class="card"><div class="list">${S.publicadores.map((p) => `<div class="item"><div class="av">${iniciais(p.nome)}</div><div class="grow"><b>${esc(p.nome)}</b><span>${p.responsavel ? "🔑 responsável pelo carrinho" : "publicador"}</span></div><button class="btn sm ghost" data-chave="${p.id}" title="Chave do carrinho">${p.responsavel ? "🔑" : "🔒"}</button><button class="btn sm ghost" data-remover="${p.id}" aria-label="Remover">✕</button></div>`).join("") || `<p class="dim">Ninguém ainda.</p>`}</div><div class="mini"><button class="btn sec" data-form="novo-pub">＋ Cadastrar publicador</button></div></div>`;
+  h += `<h2>Semana</h2><div class="card"><div class="mini" style="margin-top:0"><a class="btn ghost" href="${wa(textoSemana())}" target="_blank" rel="noopener">💬 Enviar escala no grupo</a><button class="btn ghost" onclick="window.print()">🖨️ Imprimir</button></div><p class="small dim" style="margin:10px 0 0">${S.mes_turnos} turnos com gente no mês · ${gaps().length} vagos nesta semana</p></div>`;
+  h += `<h2>Problemas e contato</h2><div class="card"><div class="small">Responsável: <b>${esc(ct.nome || "?")}</b> · WhatsApp ${esc(ct.whatsapp || "?")}</div><div class="mini"><button class="btn wa" data-problema="">⚠️ Avisar um problema</button><button class="btn ghost" data-form="contato">✎ Contato</button><button class="btn ghost" data-form="problemas">✎ Lista</button></div></div>`;
+  h += `<h2>Porta e aparelho</h2><div class="card"><div class="mini" style="margin-top:0"><button class="btn ghost" data-form="senha">🔐 Trocar código da porta</button><button class="btn ghost" data-form="congregacao">✎ Nome da congregação</button><button class="btn ghost" data-sair="1">Sair deste aparelho</button></div></div>`;
+  return h;
+}
+
+// ---------- folha de detalhe do turno
+function abrir(id) {
+  const t = turnos.find((x) => x.id === id); if (!t) return;
+  const l = local(t.local), c = cart(l.carrinho), s = status(t), ja = t.quem.includes(EU?.id), cheio = t.quem.length >= R().max_por_turno;
+  const dupla = t.quem.filter((x) => x !== EU?.id);
+  abrirSheet(`<div class="row"><div style="width:48px;height:48px;border-radius:14px;background:${esc(l.cor)};display:grid;place-items:center;font-size:24px;color:#fff">${l.icone}</div><div class="grow"><h3>${quando(t)}</h3><div class="dim">${esc(l.nome)}${c ? " · " + esc(c.nome) : ""}</div></div><span class="pill ${s.k}">${s.txt}</span></div>
+    ${t.cancelado ? `<div class="notice" style="margin-top:14px">🌧️ <div>Turno cancelado: ${esc(t.cancelado)}.</div></div>` : ""}
+    <h2>Quem vai</h2><div class="list">${t.quem.map((id) => `<div class="item"><div class="av">${iniciais(pub(id).nome)}</div><div class="grow"><b>${esc(pub(id).nome)}${id === EU?.id ? " (você)" : ""}</b><span>${pub(id).responsavel ? "🔑 responsável pelo carrinho" : "publicador"}</span></div></div>`).join("")}${Array.from({ length: Math.max(0, R().min_por_turno - t.quem.length) }).map(() => `<div class="item"><div class="av x">?</div><div class="grow"><b class="dim">Vaga aberta</b><span>alguém precisa entrar</span></div></div>`).join("")}</div>
+    ${!temResp(t) && t.quem.length ? `<div class="notice" style="margin-top:12px">🔑 <div>Ninguém neste turno tem a chave do carrinho. Um responsável precisa entrar ou combinar a entrega.</div></div>` : ""}
+    <h2>Carrinho e lugar</h2><div class="card"><div class="small">${c ? `<b>${esc(c.nome)}</b> · guardado: ${esc(c.guardado || "?")}<br>` : ""}${esc(l.endereco || "")}</div><div class="mini">${l.mapa ? `<a class="btn sm ghost" href="${esc(l.mapa)}" target="_blank" rel="noopener">📍 Como chegar</a>` : ""}${dupla.length ? `<a class="btn sm ghost" href="${wa(`Oi! Somos dupla no carrinho ${DIAS_L[t.dia]} ${t.hora} na ${l.nome}. Combinamos?`)}" target="_blank" rel="noopener">💬 Falar com a dupla</a>` : ""}<button class="btn sm ghost" data-problema="${t.id}">⚠️ Problema</button></div></div>
+    <div class="btns" style="margin-top:14px">${t.cancelado ? `<button class="btn sec" data-reabrir="${t.id}">Reabrir turno</button>` : ja ? `<button class="btn danger" data-leave="${t.id}">Sair do turno</button>` : cheio ? `<button class="btn ghost" disabled>Turno cheio</button>` : `<button class="btn" data-join="${t.id}">Entrar neste turno</button>`}${!t.cancelado ? `<button class="btn ghost" data-cancel="${t.id}">🌧️ Cancelar</button>` : ""}</div>`);
+}
+function problema(turnoId) {
+  const t = turnos.find((x) => x.id === turnoId); const ct = cfg().contato || {};
+  const ctx = t ? ` (${local(t.local).nome}, ${DIAS_L[t.dia]} ${t.hora})` : "";
+  const lista = (cfg().problemas || ["Outro"]).map((p) => `<button class="pessoa" data-wa-problema="${esc(p)}" data-ctx="${esc(ctx)}">⚠️ ${esc(p)}</button>`).join("");
+  abrirSheet(`<h3>Algum problema?</h3><p class="dim small">Abre o WhatsApp de ${esc(ct.nome || "quem cuida")} com a mensagem pronta.</p><div style="margin:14px 0">${lista}</div>`);
+}
+function abrirSheet(html, lock = false) { const s = $("#sheet"); s.innerHTML = `<div class="grab"></div>` + html; s.dataset.lock = lock ? "1" : ""; $("#sheetBg").classList.add("open"); s.classList.add("open"); }
+function fechar(force = false) { if ($("#sheet").dataset.lock && !force) return; $("#sheetBg").classList.remove("open"); $("#sheet").classList.remove("open"); $("#sheet").dataset.lock = ""; }
+let toastT; function toast(txt) { const el = $("#toast"); el.textContent = txt; el.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove("on"), 3000); }
+
+// ---------- formulários genéricos (tudo que edita configuração)
+function formulario({ titulo, campos, valores, salvar, remover, lock }) {
+  const f = campos.map((c) => {
+    const v = valores[c.k];
+    if (c.tipo === "checkbox") return `<label class="chk"><input type="checkbox" name="${c.k}" ${v ? "checked" : ""}> ${esc(c.label)}</label>`;
+    if (c.tipo === "dias") return `<div class="f"><label>${esc(c.label)}</label><div class="dias7">${[1, 2, 3, 4, 5, 6, 0].map((d) => `<label class="${(v || []).includes(d) ? "on" : ""}"><input type="checkbox" name="${c.k}" value="${d}" ${(v || []).includes(d) ? "checked" : ""}>${DIAS[d]}</label>`).join("")}</div></div>`;
+    if (c.tipo === "select") return `<div class="f"><label>${esc(c.label)}</label><select name="${c.k}">${c.opcoes.map((o) => `<option value="${esc(o.v)}" ${o.v === v ? "selected" : ""}>${esc(o.t)}</option>`).join("")}</select></div>`;
+    if (c.tipo === "textarea") return `<div class="f"><label>${esc(c.label)}</label><textarea name="${c.k}" placeholder="${esc(c.ph || "")}">${esc(v)}</textarea></div>`;
+    if (c.tipo === "color") return `<div class="f"><label>${esc(c.label)}</label><input type="color" name="${c.k}" value="${esc(v || "#1f6f8b")}"></div>`;
+    return `<div class="f"><label>${esc(c.label)}</label><input type="${c.tipo || "text"}" name="${c.k}" value="${esc(v ?? "")}" placeholder="${esc(c.ph || "")}" ${c.tipo === "number" ? 'inputmode="numeric" min="0"' : ""} ${c.tipo === "tel" ? 'inputmode="numeric"' : ""}></div>`;
+  }).join("");
+  abrirSheet(`<h3>${esc(titulo)}</h3><form id="form">${f}<div class="btns"><button class="btn" type="submit">Salvar</button>${lock ? "" : `<button class="btn ghost" type="button" data-fechar="1">Voltar</button>`}</div>${remover ? `<div class="mini" style="justify-content:center"><button class="btn ghost" type="button" id="formRemover" style="color:var(--bad)">Remover</button></div>` : ""}</form>`, lock);
+  const form = $("#form");
+  form.querySelectorAll(".dias7 input").forEach((i) => i.addEventListener("change", () => i.parentElement.classList.toggle("on", i.checked)));
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const v = {};
+    for (const c of campos) {
+      if (c.tipo === "checkbox") v[c.k] = form.elements[c.k].checked;
+      else if (c.tipo === "dias") v[c.k] = [...form.querySelectorAll(`input[name="${c.k}"]:checked`)].map((i) => Number(i.value));
+      else if (c.tipo === "number") v[c.k] = Number(form.elements[c.k].value);
+      else if (c.tipo === "horas") v[c.k] = form.elements[c.k].value.split(/[,\s;]+/).map(normHora).filter(Boolean);
+      else v[c.k] = form.elements[c.k].value.trim();
+    }
+    try { await salvar(v); } catch {}
+  });
+  if (remover) $("#formRemover").addEventListener("click", async () => { if (confirm("Remover mesmo?")) { try { await remover(); } catch {} } });
+}
+const normHora = (s) => { const m = String(s).match(/^(\d{1,2})(?::?(\d{2}))?h?$/); return m ? `${String(Number(m[1])).padStart(2, "0")}:${m[2] || "00"}` : ""; };
+const slug = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "local";
+async function salvarConfig(chave, valor) { await acao("config_salvar", { chave, valor }); fechar(true); toast("Salvo ✅"); }
+
+const FORMS = {
+  "novo-eu": formNovoEu,
+  "novo-pub": () => formulario({ titulo: "Cadastrar publicador", campos: [{ k: "nome", label: "Nome", tipo: "text", ph: "Ex.: Carlos E." }, { k: "responsavel", label: "Tem a chave do carrinho (responsável)", tipo: "checkbox" }], valores: {}, salvar: async (v) => { if (v.nome.length < 2) return toast("Escreve o nome"); await acao("publicador_salvar", { nome: v.nome, responsavel: v.responsavel }); fechar(true); toast(`${v.nome} cadastrado ✅`); } }),
+  regras: () => formulario({ titulo: "Regras", campos: [{ k: "min_por_turno", label: "Mínimo por turno", tipo: "number" }, { k: "max_por_turno", label: "Máximo por turno", tipo: "number" }, { k: "max_por_semana", label: "Máximo de turnos por semana por pessoa", tipo: "number" }, { k: "cancelar_ate_horas", label: "Cancelar até quantas horas antes", tipo: "number" }], valores: R(), salvar: (v) => salvarConfig("regras", v) }),
+  congregacao: () => formulario({ titulo: "Nome da congregação", campos: [{ k: "nome", label: "Nome", tipo: "text" }], valores: { nome: cfg().congregacao }, salvar: (v) => salvarConfig("congregacao", v.nome) }),
+  contato: () => formulario({ titulo: "Quem recebe os problemas", campos: [{ k: "nome", label: "Nome", tipo: "text" }, { k: "whatsapp", label: "WhatsApp com DDI e DDD, só números", tipo: "tel", ph: "5521999999999" }], valores: cfg().contato || {}, salvar: (v) => salvarConfig("contato", { nome: v.nome, whatsapp: v.whatsapp.replace(/\D/g, "") }) }),
+  problemas: () => formulario({ titulo: "Lista de problemas", campos: [{ k: "lista", label: "Um por linha", tipo: "textarea" }], valores: { lista: (cfg().problemas || []).join("\n") }, salvar: (v) => salvarConfig("problemas", v.lista.split("\n").map((s) => s.trim()).filter(Boolean)) }),
+  senha: () => formulario({ titulo: "Trocar código da porta", campos: [{ k: "nova", label: "Novo código (só números, 4 ou mais)", tipo: "tel" }], valores: {}, salvar: async (v) => { const nova = v.nova.replace(/\D/g, ""); if (nova.length < 4) return toast("Pelo menos 4 dígitos"); await acao("senha_trocar", { nova }); ls.set(LS.senha, nova); fechar(true); toast("Código trocado. Avisa o grupo 🔐"); } }),
+  local: (i) => {
+    const locais = [...(cfg().locais || [])]; const l = locais[i] || { cor: "#1f6f8b", icone: "📍", dias: [1, 2, 3, 4, 5], horas: ["08:00", "10:00"], duracao: 2, carrinho: (cfg().carrinhos || [])[0]?.id || "A" };
+    formulario({ titulo: i >= 0 ? "Editar local" : "Novo local", campos: [
+      { k: "nome", label: "Nome", tipo: "text" }, { k: "apelido", label: "Apelido curto", tipo: "text" }, { k: "icone", label: "Emoji", tipo: "text" }, { k: "cor", label: "Cor", tipo: "color" },
+      { k: "endereco", label: "Endereço / ponto de encontro", tipo: "text" }, { k: "mapa", label: "Link do mapa (opcional)", tipo: "url" }, { k: "janela", label: "Texto do horário (ex.: seg–sex · 8h–12h)", tipo: "text" },
+      { k: "carrinho", label: "Carrinho", tipo: "select", opcoes: (cfg().carrinhos || []).map((c) => ({ v: c.id, t: c.nome })) },
+      { k: "dias", label: "Dias com turno", tipo: "dias" }, { k: "horas", label: "Horários de início (ex.: 08:00, 10:00, 14:00)", tipo: "horas" }, { k: "duracao", label: "Duração de cada turno (horas)", tipo: "number" }],
+      valores: { ...l, horas: (l.horas || []).join(", ") },
+      salvar: (v) => { if (!v.nome) return toast("Escreve o nome"); const novo = { ...l, ...v, apelido: v.apelido || v.nome, duracao: v.duracao || 2, id: l.id || slug(v.nome) }; if (i >= 0) locais[i] = novo; else locais.push(novo); return salvarConfig("locais", locais); },
+      remover: i >= 0 ? () => salvarConfig("locais", locais.filter((_, j) => j !== i)) : null });
+  },
+  carrinho: (i) => {
+    const cs = [...(cfg().carrinhos || [])]; const c = cs[i] || {};
+    formulario({ titulo: i >= 0 ? "Editar carrinho" : "Novo carrinho", campos: [{ k: "nome", label: "Nome", tipo: "text", ph: "Carrinho A" }, { k: "guardado", label: "Onde fica guardado", tipo: "text" }, { k: "responsavel", label: "Quem cuida dele", tipo: "text" }, { k: "publicacoes", label: "O que leva", tipo: "text" }],
+      valores: c, salvar: (v) => { if (!v.nome) return toast("Escreve o nome"); const novo = { ...c, ...v, id: c.id || String.fromCharCode(65 + cs.length) }; if (i >= 0) cs[i] = novo; else cs.push(novo); return salvarConfig("carrinhos", cs); },
+      remover: i >= 0 ? () => salvarConfig("carrinhos", cs.filter((_, j) => j !== i)) : null });
+  },
+};
+
+// ---------- ações da escala
+async function entrar(id) {
+  const t = turnos.find((x) => x.id === id); if (!t || !EU) return;
+  await acao("entrar", { local: t.local, dia: t.dia, hora: t.hora, publicador_id: EU.id });
+  const t2 = turnos.find((x) => x.id === id); const l = local(t.local);
+  toast(t2.quem.length >= R().min_por_turno ? `✅ Confirmado: ${DIAS_L[t.dia]} ${t.hora}, ${l.apelido || l.nome}` : `✅ Inscrito. Falta uma dupla, o grupo vai ver.`);
+  fechar(true); insc = { local: null, dia: null }; location.hash = "#meus";
+}
+async function sair(id) { const t = turnos.find((x) => x.id === id); if (!t || !EU) return; await acao("sair", { local: t.local, dia: t.dia, hora: t.hora, publicador_id: EU.id }); toast("Você saiu do turno. Avisa a dupla 💬"); fechar(true); }
+async function cancelar(id) { const t = turnos.find((x) => x.id === id); if (!t) return; const motivo = prompt("Motivo (ex.: chuva prevista)", "chuva prevista"); if (motivo === null) return; await acao("cancelar", { local: t.local, dia: t.dia, hora: t.hora, motivo }); toast("Turno cancelado; todo mundo vê."); fechar(true); }
+async function reabrir(id) { const t = turnos.find((x) => x.id === id); if (!t) return; await acao("reabrir", { local: t.local, dia: t.dia, hora: t.hora }); toast("Turno reaberto."); fechar(true); }
+
+// ---------- roteador e cliques
+const TELAS = { hoje: telaHoje, agenda: telaAgenda, inscrever: telaInscrever, meus: telaMeus, mais: telaMais };
+function rota() { const r = (location.hash || "#hoje").slice(1); return TELAS[r] ? r : "hoje"; }
+function render() {
+  if (!S) return;
+  const r = rota();
+  $("#view").innerHTML = TELAS[r]();
+  document.querySelectorAll("#nav a").forEach((a) => a.classList.toggle("on", a.dataset.r === r));
+  $("#topSub").textContent = { hoje: "Testemunho público · hoje", agenda: "Semana de " + fmtD(dataDo(1)) + " a " + fmtD(dataDo(0)), inscrever: "Escolha local, dia e hora", meus: "Seus turnos e seu mês", mais: "Regras, locais, carrinhos" }[r];
+  $("#semLabel").textContent = semLabel();
+  window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", () => { if (rota() === "hoje" && !semanaAtual()) carregar(segunda(hoje())); else render(); });
+document.addEventListener("click", async (e) => {
+  const el = e.target.closest("[data-open],[data-join],[data-leave],[data-cancel],[data-reabrir],[data-loc],[data-dia],[data-pick-local],[data-pick-dia],[data-eu],[data-form],[data-chave],[data-remover],[data-trocar-eu],[data-sair],[data-sem],[data-problema],[data-wa-problema],[data-fechar]");
+  if (!el) { if (e.target === $("#sheetBg")) fechar(); return; }
+  const d = el.dataset;
+  try {
+    if (d.open) abrir(d.open);
+    else if (d.join) await entrar(d.join);
+    else if (d.leave) await sair(d.leave);
+    else if (d.cancel) await cancelar(d.cancel);
+    else if (d.reabrir) await reabrir(d.reabrir);
+    else if (d.loc) { agLocal = d.loc; render(); }
+    else if (d.dia) { agDia = Number(d.dia); render(); }
+    else if ("pickLocal" in d) { insc = { local: d.pickLocal || null, dia: null }; render(); }
+    else if ("pickDia" in d) { insc.dia = d.pickDia === "" ? null : Number(d.pickDia); render(); }
+    else if (d.eu) { ls.set(LS.eu, d.eu); EU = pub(d.eu); $("#topAv").textContent = iniciais(EU.nome); fechar(true); render(); toast(`Olá, ${EU.nome.split(" ")[0]} 👋`); }
+    else if (d.form) { FORMS[d.form](Number(d.i ?? -1)); }
+    else if (d.chave) { const p = pub(d.chave); await acao("publicador_salvar", { publicador_id: p.id, responsavel: !p.responsavel }); }
+    else if (d.remover) { const p = pub(d.remover); if (confirm(`Remover ${p.nome}? Sai também dos turnos desta semana em diante.`)) { await acao("publicador_remover", { publicador_id: p.id }); if (EU?.id === p.id) { ls.del(LS.eu); EU = null; quemSouEu(); } } }
+    else if (d.trocarEu) { ls.del(LS.eu); EU = null; quemSouEu(); }
+    else if (d.sair) { if (confirm("Sair? Vai pedir o código da porta de novo.")) { ls.del(LS.senha); ls.del(LS.eu); location.hash = ""; porta(); } }
+    else if (d.sem) { await carregar(somaDias(semana, 7 * Number(d.sem))); agDia = null; insc = { local: null, dia: null }; }
+    else if ("problema" in d) problema(d.problema);
+    else if (d.waProblema) { const ct = cfg().contato || {}; const msg = `${d.waProblema}${d.ctx || ""}. — ${EU ? EU.nome : "publicador"}, ${cfg().congregacao}`; window.open(wa(msg, ct.whatsapp), "_blank", "noopener"); fechar(true); }
+    else if (d.fechar) fechar(true);
+  } catch (err) { /* já avisado no toast */ }
+});
+$("#topAv").addEventListener("click", () => { location.hash = "#mais"; });
+
+// ---------- início
+(async () => {
+  if (!senha()) return porta();
+  try { entrarNoApp(await rpc("cn_estado", { p_senha: senha(), p_semana: semana })); }
+  catch (e) { ls.del(LS.senha); porta(e.code === "28000" ? "O código mudou. Digite o novo." : e.message); }
+})();
+</script>
+</body>
+</html>
