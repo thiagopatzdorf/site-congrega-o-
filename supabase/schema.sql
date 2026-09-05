@@ -159,9 +159,9 @@ insert into public.cn_config (chave, valor) values
 ('congregacao', to_jsonb('Congregação Nova'::text)),
 ('regras', '{"min_por_turno":2,"max_por_turno":3,"max_por_semana":3,"cancelar_ate_horas":2}'::jsonb),
 ('locais', '[
- {"id":"praca","nome":"Praça","apelido":"Praça","endereco":"","cor":"#1f6f8b","icone":"🌳","janela":"seg–sex · 8h–12h e 14h–18h","carrinho":"A","mapa":"","dias":[1,2,3,4,5],"horas":["08:00","10:00","14:00","16:00"],"duracao":2},
- {"id":"rodoviaria","nome":"Rodoviária","apelido":"Rodoviária","endereco":"","cor":"#8b5e1f","icone":"🚌","janela":"seg–sex · 7h–9h e 17h–19h","carrinho":"B","mapa":"","dias":[1,2,3,4,5],"horas":["07:00","17:00"],"duracao":2},
- {"id":"outro","nome":"Outro","apelido":"Outro","endereco":"","cor":"#3d7a3a","icone":"📍","janela":"sáb · 7h–13h","carrinho":"B","mapa":"","dias":[6],"horas":["07:00","09:00","11:00"],"duracao":2}
+ {"id":"praca","nome":"Praça","apelido":"Praça","endereco":"","cor":"#1f6f8b","icone":"🌳","janela":"todo dia · 7h–19h","carrinho":"A","mapa":"","dias":[0,1,2,3,4,5,6],"horas":["07:00","09:00","11:00","13:00","15:00","17:00"],"duracao":2},
+ {"id":"rodoviaria","nome":"Rodoviária","apelido":"Rodoviária","endereco":"","cor":"#8b5e1f","icone":"🚌","janela":"todo dia · 7h–19h","carrinho":"B","mapa":"","dias":[0,1,2,3,4,5,6],"horas":["07:00","09:00","11:00","13:00","15:00","17:00"],"duracao":2},
+ {"id":"outro","nome":"Outro","apelido":"Outro","endereco":"","cor":"#3d7a3a","icone":"📍","janela":"todo dia · 7h–19h","carrinho":"B","mapa":"","dias":[0,1,2,3,4,5,6],"horas":["07:00","09:00","11:00","13:00","15:00","17:00"],"duracao":2}
 ]'::jsonb),
 ('carrinhos', '[
  {"id":"A","nome":"Carrinho A","guardado":"Salão do Reino (armário da entrada)","responsavel":"","publicacoes":"Bíblia, Sentinela, Despertai!, folhetos"},
