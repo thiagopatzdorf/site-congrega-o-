@@ -21,133 +21,138 @@
 :root{--bg:#f5f2ec;--sur:#ffffff;--ink:#1b2430;--dim:#5f6b78;--faint:#6b7783;--line:#e6e1d8;--acc:#1f6f8b;--acc-soft:#e3f0f4;--ok:#22734a;--ok-soft:#e4f3ea;--warn:#8a5f0c;--warn-soft:#fbf1dc;--bad:#c44536;--bad-soft:#f9e4e1;--r:16px;--font:'Inter',ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:18px;line-height:1.45;-webkit-font-smoothing:antialiased}
 a{color:inherit}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 [hidden]{display:none!important}
 body.busy .btn,body.busy .grupo,body.busy .opt,body.busy .pessoa{opacity:.6;pointer-events:none}
-.app{max-width:480px;margin:0 auto;min-height:100dvh;background:var(--bg);position:relative;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;background:var(--bg);position:relative;padding-bottom:calc(100px + env(safe-area-inset-bottom))}
 @media(min-width:600px){body{background:#e9e4da url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23d8d1c4'/%3E%3C/svg%3E")}.app{box-shadow:0 0 0 1px var(--line),0 20px 60px rgba(27,36,48,.12)}.nav{max-width:480px;margin:0 auto}}
-.top{position:sticky;top:0;z-index:5;background:rgba(245,242,236,.92);backdrop-filter:blur(10px);padding:14px 18px 10px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line)}
+.top{position:sticky;top:0;z-index:5;background:rgba(245,242,236,.92);backdrop-filter:blur(10px);padding:12px 14px 10px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line)}
 .top .t{flex:1;min-width:0}
-.top .t b{display:block;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.top .t span{display:block;font-size:13px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sem{display:inline-flex;align-items:center;border-radius:999px;background:var(--acc-soft);color:var(--acc);font-size:12.5px;font-weight:600;min-height:34px}
-.sem button{min-width:34px;min-height:34px;font-size:18px;display:grid;place-items:center}
+.top .t b{display:block;font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .t span{display:block;font-size:14px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .eng{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:22px;background:#fff;border:1px solid var(--line);flex:none;text-decoration:none}
+.sem{display:inline-flex;align-items:center;border-radius:999px;background:var(--acc-soft);color:var(--acc);font-size:14px;font-weight:600;min-height:44px}
+.sem button{min-width:44px;min-height:44px;font-size:24px;display:grid;place-items:center}
 .sem span{padding:0 2px;white-space:nowrap}
-.av{width:36px;height:36px;border-radius:50%;background:var(--acc-soft);color:var(--acc);font-weight:600;font-size:13px;display:grid;place-items:center;flex:none;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
-.av.s{width:28px;height:28px;font-size:11px}
+.av{width:44px;height:44px;border-radius:50%;background:var(--acc-soft);color:var(--acc);font-weight:600;font-size:15px;display:grid;place-items:center;flex:none;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.av.s{width:34px;height:34px;font-size:13px}
 .av.x{background:#fff;color:var(--faint);border-style:dashed;border-color:var(--faint)}
 .avs{display:flex}
 .avs .av{margin-left:-8px}
 .avs .av:first-child{margin-left:0}
 main{padding:16px 18px 8px}
-h1{font-size:22px;font-weight:700;margin:6px 0 4px;letter-spacing:-.01em}
-h2{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:22px 0 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+h1{font-size:26px;font-weight:700;margin:6px 0 4px;letter-spacing:-.01em}
+h2{font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:22px 0 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 p{margin:0 0 10px}
 .dim{color:var(--dim)}
-.small{font-size:13px}
+.small{font-size:15px}
 .card{background:var(--sur);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
 .row{display:flex;align-items:center;gap:12px}
 .row .grow{flex:1;min-width:0}
-.pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;border-radius:999px;padding:6px 10px;min-height:32px;background:var(--acc-soft);color:var(--acc);white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;border-radius:999px;padding:6px 12px;min-height:36px;background:var(--acc-soft);color:var(--acc);white-space:nowrap}
 .pill.ok{background:var(--ok-soft);color:var(--ok)}
 .pill.warn{background:var(--warn-soft);color:var(--warn)}
 .pill.bad{background:var(--bad-soft);color:var(--bad)}
 .pill.ghost{background:transparent;border:1px dashed var(--faint);color:var(--dim)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 18px;border-radius:14px;background:var(--acc);color:#fff;font-weight:600;font-size:15px;width:100%;transition:transform .08s;text-decoration:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:58px;padding:0 18px;border-radius:16px;background:var(--acc);color:#fff;font-weight:600;font-size:18px;width:100%;transition:transform .08s;text-decoration:none}
 .btn:active{transform:scale(.98)}
 .btn.sec{background:var(--acc-soft);color:var(--acc)}
 .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
 .btn.danger{background:var(--bad-soft);color:var(--bad)}
-.btn.sm{min-height:40px;font-size:14px;padding:0 14px;width:auto}
+.btn.sm{min-height:48px;font-size:16px;padding:0 16px;width:auto}
 .btn.wa{background:#1f8a4c}
 .btns{display:flex;gap:10px;margin-top:12px}
 .btns .btn{flex:1}
 .chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 0 6px;margin:0 -18px;padding-left:18px;padding-right:18px}
 .chips::-webkit-scrollbar{display:none}
-.chip{flex:none;min-height:38px;padding:0 14px;border-radius:999px;background:var(--sur);border:1px solid var(--line);font-size:14px;font-weight:500;display:inline-flex;align-items:center;gap:8px}
+.chip{flex:none;min-height:48px;padding:0 18px;border-radius:999px;background:var(--sur);border:1px solid var(--line);font-size:17px;font-weight:600;display:inline-flex;align-items:center;gap:8px}
 .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 .chip .dot{width:8px;height:8px;border-radius:50%}
-.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:10px 0 16px}
-.day{background:var(--sur);border:1px solid var(--line);border-radius:12px;padding:8px 0 6px;text-align:center;min-height:62px;display:flex;flex-direction:column;align-items:center;gap:2px}
-.day span{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
-.day b{font-size:17px;font-weight:600}
-.day i{font-style:normal;font-size:12px;color:var(--faint)}
+.days{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:10px -18px 16px;padding:2px 18px 6px}
+.days::-webkit-scrollbar{display:none}
+.day{flex:none;width:92px;background:var(--sur);border:1px solid var(--line);border-radius:14px;padding:10px 0 8px;text-align:center;min-height:84px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.day span{font-size:14px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.day b{font-size:24px;font-weight:700}
+.day i{font-style:normal;font-size:13px;color:var(--faint)}
 .day.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 .day.on span,.day.on i{color:rgba(255,255,255,.7)}
 .day.today b{color:var(--acc)}
 .day.on.today b{color:#fff;text-decoration:underline}
 .day.off{opacity:.5}
-.day.gap::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--warn);margin-top:2px}
+.day.gap::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--warn);margin-top:2px}
+.diaBtn{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:#fff;margin-bottom:10px;font-size:18px;font-weight:600;min-height:64px}
+.diaBtn small{margin-left:auto;font-size:15px;font-weight:500;color:var(--dim);text-align:right}
+.diaBtn.off{opacity:.45}
 /* linha do tempo do dia num local: 6h–22h */
-.tl{display:flex;height:14px;border-radius:7px;overflow:hidden;background:#ece8df;margin:8px 0 4px}
+.tl{display:flex;height:18px;border-radius:9px;overflow:hidden;background:#ece8df;margin:8px 0 4px}
 .tl i{flex:1;background:transparent}
 .tl i.um{background:#e6b85c}
 .tl i.ok{background:#3f9a68}
 .tl i.can{background:#e0a49b}
 .tl i.eu{box-shadow:inset 0 -3px 0 var(--ink)}
-.tl-h{display:flex;justify-content:space-between;font-size:10.5px;color:var(--faint);margin-bottom:8px;font-variant-numeric:tabular-nums}
-.grupo{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line);width:100%;text-align:left}
+.tl-h{display:flex;justify-content:space-between;font-size:13px;color:var(--faint);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.grupo{display:flex;align-items:center;gap:12px;padding:16px 0;border-top:1px solid var(--line);width:100%;text-align:left}
 .grupo:first-of-type{border-top:0}
-.grupo .h{width:58px;flex:none;font-weight:600;font-size:14px;line-height:1.2;font-variant-numeric:tabular-nums}
-.grupo .h small{display:block;font-size:12px;color:var(--faint);font-weight:500}
+.grupo .h{width:64px;flex:none;font-weight:700;font-size:17px;line-height:1.2;font-variant-numeric:tabular-nums}
+.grupo .h small{display:block;font-size:14px;color:var(--faint);font-weight:500}
 .grupo .who{flex:1;min-width:0}
-.grupo .who .n{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grupo .who .n{font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .grupo .who .n b{font-weight:600}
-.grupo .who .sub{font-size:12px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.grupo .who .sub{font-size:14px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .grupo.off{opacity:.55}
 .loc-head{display:flex;align-items:center;gap:10px;margin:18px 0 6px}
-.loc-head .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:18px;color:#fff}
-.loc-head b{font-size:15px;font-weight:600;display:block}
-.loc-head span{font-size:12.5px;color:var(--dim)}
+.loc-head .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:24px;color:#fff}
+.loc-head b{font-size:19px;font-weight:600;display:block}
+.loc-head span{font-size:14px;color:var(--dim)}
 .loc-head .cart{margin-left:auto}
 .cart{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:3px 8px;border-radius:8px;background:#fff;border:1px solid var(--line);color:var(--dim)}
 .tile{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tile .card{margin:0;padding:14px}
 .tile b{font-size:24px;font-weight:700;display:block;letter-spacing:-.02em}
 .tile span{font-size:12.5px;color:var(--dim)}
-.opt{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--line);border-radius:var(--r);background:var(--sur);margin-bottom:10px;width:100%;text-align:left}
-.opt .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;color:#fff;flex:none}
-.opt b{display:block;font-size:16px;font-weight:600}
-.opt span{display:block;font-size:13px;color:var(--dim)}
+.opt{display:flex;align-items:center;gap:14px;padding:16px;min-height:76px;border:1px solid var(--line);border-radius:var(--r);background:var(--sur);margin-bottom:10px;width:100%;text-align:left}
+.opt .ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:28px;color:#fff;flex:none}
+.opt b{display:block;font-size:19px;font-weight:600}
+.opt span{display:block;font-size:14px;color:var(--dim)}
 .opt .arr{margin-left:auto;color:var(--faint);font-size:20px}
 .opt.on{border-color:var(--acc);background:var(--acc-soft)}
 .steps{display:flex;gap:6px;margin:4px 0 14px}
 .steps i{flex:1;height:4px;border-radius:2px;background:var(--line)}
 .steps i.on{background:var(--acc)}
-.list .item{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.list .item{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--line)}
 .list .item:first-child{border-top:0}
-.list .item b{font-weight:600;font-size:15px;display:block}
-.list .item span{font-size:13px;color:var(--dim);display:block}
+.list .item b{font-weight:600;font-size:18px;display:block}
+.list .item span{font-size:15px;color:var(--dim);display:block}
 .mini{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.mini .btn{width:auto;min-height:40px;font-size:13px;padding:0 12px}
-.rule{display:flex;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
+.mini .btn{width:auto;min-height:48px;font-size:16px;padding:0 14px}
+.rule{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line);font-size:16px}
 .rule:first-child{border-top:0}
 .rule .k{font-size:20px;flex:none;width:28px;text-align:center}
-.notice{background:var(--warn-soft);border:1px solid #f0d9a8;border-radius:12px;padding:12px 14px;font-size:14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start}
+.notice{background:var(--warn-soft);border:1px solid #f0d9a8;border-radius:12px;padding:14px 16px;font-size:16px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start}
 .notice.ok{background:var(--ok-soft);border-color:#bfe3cb}
 .tag{font-size:12px;font-weight:600;color:var(--warn)}
 .fx{font-size:11px;font-weight:600;color:var(--acc);background:var(--acc-soft);border-radius:6px;padding:1px 5px;vertical-align:middle}
-.nav{position:fixed;bottom:0;left:0;right:0;z-index:10;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:6px 6px calc(8px + env(safe-area-inset-bottom))}
-.nav a{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0 2px;font-size:12px;font-weight:500;color:var(--dim);text-decoration:none;border-radius:12px}
-.nav a .i{font-size:20px;line-height:1}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:10;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 6px calc(10px + env(safe-area-inset-bottom))}
+.nav a{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0 2px;font-size:14px;font-weight:600;color:var(--dim);text-decoration:none;border-radius:12px}
+.nav a .i{font-size:28px;line-height:1}
 .nav a.on{color:var(--acc)}
-.nav a.main .i{width:44px;height:44px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;margin-top:-22px;box-shadow:0 8px 20px rgba(31,111,139,.35);border:3px solid #fff;font-size:24px}
+.nav a.main .i{width:60px;height:60px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;margin-top:-30px;box-shadow:0 8px 20px rgba(31,111,139,.35);border:4px solid #fff;font-size:34px}
 .nav a.main{color:var(--acc)}
 .sheet-bg{position:fixed;inset:0;background:rgba(27,36,48,.45);z-index:20;opacity:0;pointer-events:none;transition:opacity .2s}
 .sheet-bg.open{opacity:1;pointer-events:auto}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;background:var(--sur);border-radius:22px 22px 0 0;padding:10px 18px calc(18px + env(safe-area-inset-bottom));max-height:88dvh;overflow-y:auto;transform:translateY(105%);transition:transform .25s cubic-bezier(.2,.8,.2,1);max-width:480px;margin:0 auto}
 .sheet.open{transform:none}
 .sheet .grab{width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 14px}
-.sheet h3{margin:0 0 2px;font-size:18px;font-weight:700;line-height:1.25}
-.toast{pointer-events:none;position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;font-size:14px;z-index:30;opacity:0;transition:.25s;max-width:calc(100% - 36px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.sheet h3{margin:0 0 2px;font-size:22px;font-weight:700;line-height:1.25}
+.toast{pointer-events:none;position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:14px 18px;border-radius:14px;font-size:17px;z-index:30;opacity:0;transition:.25s;max-width:calc(100% - 36px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.25)}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 .hero{background:linear-gradient(135deg,var(--acc),#155a72);color:#fff;border-radius:20px;padding:18px;margin:8px 0 14px;position:relative;overflow:hidden}
 .hero::after{content:"";position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.08)}
-.hero .k{font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.9}
-.hero b{display:block;font-size:24px;font-weight:700;margin:4px 0 2px;letter-spacing:-.01em}
-.hero p{opacity:.9;font-size:14px;margin:0}
+.hero .k{font-size:14px;letter-spacing:.08em;text-transform:uppercase;opacity:.9}
+.hero b{display:block;font-size:26px;font-weight:700;margin:4px 0 2px;letter-spacing:-.01em}
+.hero p{opacity:.9;font-size:17px;margin:0}
 .hero .btns .btn{background:#fff;color:var(--acc)}
 .hero .btns .btn.ghost{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.35)}
 .foot{padding:20px 18px 8px;font-size:12.5px;color:var(--faint);text-align:center;line-height:1.5}
@@ -167,24 +172,28 @@ p{margin:0 0 10px}
 .carregando{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:var(--bg);color:var(--dim);font-size:14px}
 /* formulários */
 .f{display:flex;flex-direction:column;gap:6px;margin:12px 0}
-.f label{font-size:13px;font-weight:600;color:var(--dim)}
-.f input[type=text],.f input[type=number],.f input[type=tel],.f input[type=url],.f textarea,.f select{font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);width:100%;min-height:48px}
+.f label{font-size:15px;font-weight:600;color:var(--dim)}
+.f input[type=text],.f input[type=number],.f input[type=tel],.f input[type=url],.f textarea,.f select{font:inherit;font-size:20px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--ink);width:100%;min-height:58px}
 .f textarea{min-height:72px;resize:vertical}
 .f input[type=color]{width:56px;height:40px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:2px}
-.chk{display:flex;align-items:center;gap:12px;font-size:15px;padding:10px 0;font-weight:500}
-.chk input{width:24px;height:24px;accent-color:var(--acc)}
+.chk{display:flex;align-items:center;gap:14px;font-size:18px;padding:14px 16px;font-weight:600;border:1px solid var(--line);border-radius:16px;background:#fff;margin-top:12px}
+.chk input{width:30px;height:30px;accent-color:var(--acc);flex:none}
 .dias7{display:flex;gap:5px}
 .dias7 label{flex:1;text-align:center;border:1px solid var(--line);border-radius:10px;padding:9px 0;font-size:13px;background:#fff;font-weight:600;color:var(--dim)}
 .dias7 label.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 .dias7 input{display:none}
-.pessoa{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff;margin-bottom:8px;font-size:16px;font-weight:500}
+.pessoa{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px;border:1px solid var(--line);border-radius:16px;background:#fff;margin-bottom:10px;font-size:19px;font-weight:600;min-height:68px}
 .horas{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end}
 .horas .f{margin:0}
 .horas .seta{padding-bottom:14px;color:var(--faint);font-size:18px}
 .dur{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.dur button{font-size:12.5px;font-weight:600;border:1px solid var(--line);border-radius:999px;padding:6px 11px;background:#fff;color:var(--dim)}
+.dur button{font-size:16px;font-weight:600;border:1px solid var(--line);border-radius:999px;padding:10px 16px;min-height:44px;background:#fff;color:var(--dim)}
 .dur button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.previa{background:var(--bg);border-radius:12px;padding:10px 12px;font-size:13.5px;margin-top:12px}
+.previa{background:var(--bg);border-radius:12px;padding:12px 14px;font-size:16px;margin-top:12px}
+details.mais{margin-top:14px}
+details.mais summary{list-style:none;cursor:pointer;font-weight:600;color:var(--dim);font-size:16px;padding:12px 0;text-align:center}
+details.mais summary::-webkit-details-marker{display:none}
+details.mais[open] summary{color:var(--ink)}
 .previa b{font-weight:600}
 @media print{.nav,.top,.foot,.sheet-bg,.sheet,.porta{display:none}.app{padding:0;max-width:none}.card{break-inside:avoid}}
 </style>
@@ -202,19 +211,19 @@ p{margin:0 0 10px}
 <div class="carregando" id="carregando">Abrindo a escala…</div>
 <div class="app" id="app" hidden>
   <header class="top">
-    <button class="av" id="topAv" aria-label="Quem sou eu">?</button>
+    <div class="av" id="topAv" aria-hidden="true" hidden>?</div>
     <div class="t"><b id="topTitle">Congregação Nova</b><span id="topSub">Testemunho público</span></div>
     <div class="sem" id="semNav"><button data-sem="-1" aria-label="Semana anterior">‹</button><span id="semLabel">esta semana</span><button data-sem="1" aria-label="Próxima semana">›</button></div>
+    <a class="eng" href="#mais" aria-label="Organizar">⚙️</a>
   </header>
   <main id="view"></main>
   <footer class="foot" id="foot"></footer>
 </div>
 <nav class="nav" id="nav" aria-label="principal" hidden>
   <a href="#hoje" data-r="hoje"><span class="i">☀️</span>Hoje</a>
-  <a href="#agenda" data-r="agenda"><span class="i">🗓️</span>Agenda</a>
-  <a href="#inscrever" data-r="inscrever" class="main"><span class="i">+</span>Entrar</a>
-  <a href="#meus" data-r="meus"><span class="i">🙋</span>Meus</a>
-  <a href="#mais" data-r="mais"><span class="i">☰</span>Mais</a>
+  <a href="#agenda" data-r="agenda"><span class="i">🗓️</span>Escala</a>
+  <a href="#inscrever" data-r="inscrever" class="main"><span class="i">+</span>Marcar</a>
+  <a href="#meus" data-r="meus"><span class="i">🙋</span>Eu</a>
 </nav>
 <div class="sheet-bg" id="sheetBg"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Detalhes"></div>
@@ -398,7 +407,7 @@ function porLocal(dia, filtro = "todos") {
     if (filtro !== "todos" && l.id !== filtro) continue;
     if (!(l.dias || []).includes(dia)) continue;
     const gs = grupos(l.id, dia);
-    h += `<div class="loc-head"><div class="ic" style="background:${esc(l.cor || "#1f6f8b")}">${l.icone || "📍"}</div><div><b>${esc(l.nome)}</b><span>${esc(l.janela || "")}</span></div><span class="cart">📚 ${esc(l.carrinho || "")}</span></div><div class="card" style="padding:10px 16px 4px">${linhaTempo(l, dia)}${gs.length ? listaGrupos(gs) : `<div class="small dim" style="padding:4px 0 10px">Ninguém ainda neste dia.</div>`}<div class="mini" style="margin:4px 0 10px"><button class="btn sm sec" data-novo="${l.id}|${dia}">＋ Entrar aqui</button></div></div>`;
+    h += `<div class="loc-head"><div class="ic" style="background:${esc(l.cor || "#1f6f8b")}">${l.icone || "📍"}</div><div><b>${esc(l.nome)}</b><span>${esc(l.janela || "")}</span></div><span class="cart">📚 ${esc(l.carrinho || "")}</span></div><div class="card" style="padding:10px 16px 4px">${linhaTempo(l, dia)}${gs.length ? listaGrupos(gs) : `<div class="small dim" style="padding:4px 0 10px">Ninguém ainda neste dia.</div>`}<div style="margin:6px 0 12px"><button class="btn sec" data-novo="${l.id}|${dia}">＋ Marcar aqui</button></div></div>`;
   }
   return h;
 }
@@ -412,24 +421,21 @@ function telaHoje() {
     const l = local(prox.local), c = cart(l.carrinho);
     const dupla = [...new Set(P.filter((q) => q.local === prox.local && q.dia === prox.dia && q.pub !== EU.id && q.ini < prox.fim && q.fim > prox.ini).map((q) => pub(q.pub).nome))];
     h += `<div class="hero"><div class="k">Seu próximo horário${prox.fixo ? " · 🔁 toda semana" : ""}</div><b>${quando(prox.dia, prox.ini, prox.fim)}</b><p>${l.icone} ${esc(l.nome)} · ${c ? esc(c.nome) : ""}${dupla.length ? ` · com ${esc(dupla.join(" e "))}` : " · <u>ainda sem dupla</u>"}</p>
-      <div class="btns"><a class="btn" href="${wa(`Oi! Confirmando nosso horário de testemunho público ${DIAS_L[prox.dia]} ${txt(prox.ini)}–${txt(prox.fim)} na ${l.nome}.${c && c.guardado ? ` Carrinho: ${c.guardado}.` : ""}`)}" target="_blank" rel="noopener">💬 Combinar</a><button class="btn ghost" data-grupo="${grupoDa(prox).id}">Detalhes</button></div></div>`;
+      <div class="btns"><button class="btn" data-grupo="${grupoDa(prox).id}">Ver quem vai</button></div></div>`;
   } else {
-    h += `<div class="hero"><div class="k">${semanaAtual() ? "Esta semana" : semLabel()}</div><b>Você ainda não marcou horário</b><p>Escolhe o local, o dia, e de que hora a que hora. Pode ser quebrado: 13:30 às 15:15, por exemplo.</p><div class="btns"><a class="btn" href="#inscrever">＋ Entrar</a></div></div>`;
+    h += `<div class="hero"><div class="k">${semanaAtual() ? "Esta semana" : semLabel()}</div><b>Você ainda não marcou horário</b><p>Aperte o botão e escolha o lugar, o dia e a hora.</p><div class="btns"><a class="btn" href="#inscrever">＋ Marcar meu horário</a></div></div>`;
   }
   const soz = precisando();
   if (soz.length) {
     h += `<h2>Precisando de companhia <span class="tag">${soz.length}</span></h2><div class="card" style="padding:4px 16px">`;
     for (const p of soz) { const l = local(p.local); const souEu = p.pub === EU?.id; h += `<div class="grupo"><div class="h">${txt(p.ini)}<small>${DIAS[p.dia]} ${fmtD(dataDo(p.dia))}</small></div><div class="who"><div class="n">${nomeDe(p)}</div><div class="sub">${l.icone} ${esc(l.apelido || l.nome)} · ${txt(p.ini)}–${txt(p.fim)} · sozinho ${curto(p.sozinho)}${souEu ? " · é você" : ""}</div></div>${souEu ? `<button class="btn sm ghost" data-grupo="${grupoDa(p).id}">＋ Chamar</button>` : `<button class="btn sm sec" data-vou="${p.id}">Eu vou</button>`}</div>`; }
-    h += `</div><div class="mini" style="margin-top:0"><a class="btn ghost" href="${wa(textoSozinhos(soz))}" target="_blank" rel="noopener">💬 Avisar no grupo quem está sozinho</a></div>`;
+    h += `</div>`;
   }
-  h += `<h2>Carrinhos agora</h2>`;
-  for (const c of cfg().carrinhos || []) {
-    const emUso = semanaAtual() ? P.find((p) => local(p.local)?.carrinho === c.id && p.dia === dow && !p.cancelado && p.ini <= agora && p.fim > agora) : null;
-    const js = emUso ? juntos(emUso.local, dow, agora) : [];
-    h += `<div class="card row"><div style="font-size:26px">📚</div><div class="grow"><b>${esc(c.nome)}</b><div class="small dim">${emUso ? `na ${esc(local(emUso.local).nome)} com ${esc([...new Set(js.map((p) => pub(p.pub).nome.split(" ")[0]))].join(" e "))} até ${txt(Math.max(...js.map((p) => p.fim)))}` : c.guardado ? `guardado: ${esc(c.guardado)}` : `<span class="dim">onde fica? Cadastre em Mais › Carrinhos</span>`}</div></div><span class="pill ${emUso ? "ok" : "ghost"}">${emUso ? "na rua" : "guardado"}</span></div>`;
-  }
-  if (semanaAtual()) h += `<h2>Hoje nos locais</h2>` + porLocal(dow);
-  h += `<div class="mini"><button class="btn ghost" data-problema="">⚠️ Algum problema no carrinho?</button></div>`;
+  const hojeP = semanaAtual() ? P.filter((p) => p.dia === dow && !p.cancelado && p.fim > agora) : [];
+  h += `<h2>Hoje no carrinho</h2>`;
+  if (hojeP.length) { for (const l of cfg().locais || []) { const gs = grupos(l.id, dow).filter((g) => g.fim > agora); if (gs.length) h += `<div class="loc-head"><div class="ic" style="background:${esc(l.cor || "#1f6f8b")}">${l.icone || "📍"}</div><div><b>${esc(l.nome)}</b></div></div><div class="card" style="padding:4px 16px">${listaGrupos(gs)}</div>`; } }
+  else h += `<div class="card dim">Ninguém marcado para hoje${semanaAtual() ? "" : " (semana mostrada não é a atual)"}.</div>`;
+  h += `<div style="margin-top:18px"><button class="btn wa" data-problema="">⚠️ Problema no carrinho? Falar com ${esc((cfg().contato || {}).nome || "o responsável")}</button></div>`;
   return h;
 }
 function textoSozinhos(lista) {
@@ -443,10 +449,9 @@ let agDia = null, agLocal = "todos";
 function telaAgenda() {
   if (agDia === null) agDia = semanaAtual() ? hoje().getDay() : 1;
   const dow = hoje().getDay();
-  let h = `<h1>Agenda</h1><div class="chips"><button class="chip${agLocal === "todos" ? " on" : ""}" data-loc="todos">Todos</button>${(cfg().locais || []).map((l) => `<button class="chip${agLocal === l.id ? " on" : ""}" data-loc="${l.id}"><span class="dot" style="background:${esc(l.cor || "#1f6f8b")}"></span>${esc(l.apelido || l.nome)}</button>`).join("")}</div>`;
+  let h = `<h1>Escala</h1><div class="chips"><button class="chip${agLocal === "todos" ? " on" : ""}" data-loc="todos">Todos</button>${(cfg().locais || []).map((l) => `<button class="chip${agLocal === l.id ? " on" : ""}" data-loc="${l.id}"><span class="dot" style="background:${esc(l.cor || "#1f6f8b")}"></span>${esc(l.apelido || l.nome)}</button>`).join("")}</div>`;
   h += `<div class="days">${[1, 2, 3, 4, 5, 6, 0].map((d) => { const ps = P.filter((p) => p.dia === d && (agLocal === "todos" || p.local === agLocal)); const g = ps.some((p) => p.sozinho >= PASSO); return `<button class="day${agDia === d ? " on" : ""}${semanaAtual() && d === dow ? " today" : ""}${g ? " gap" : ""}" data-dia="${d}"><span>${DIAS[d]}</span><b>${fmtD(dataDo(d))}</b><i>${ps.length ? ps.length + (ps.length > 1 ? " pessoas" : " pessoa") : "—"}</i></button>`; }).join("")}</div>`;
   h += porLocal(agDia, agLocal) || `<div class="card dim">Nenhum local abre ${DIAS_L[agDia]}.</div>`;
-  h += `<div class="mini"><a class="btn ghost" href="${wa(textoSemana())}" target="_blank" rel="noopener">💬 Mandar a semana no grupo</a><button class="btn ghost" onclick="window.print()">🖨️ Imprimir</button></div>`;
   return h;
 }
 function textoSemana() {
@@ -464,21 +469,22 @@ function textoSemana() {
 let insc = { local: null, dia: null };
 function telaInscrever() {
   const passo = !insc.local ? 1 : insc.dia === null ? 2 : 3;
-  let h = `<h1>Entrar</h1><div class="steps"><i class="on"></i><i class="${passo >= 2 ? "on" : ""}"></i><i class="${passo >= 3 ? "on" : ""}"></i></div>`;
+  let h = `<h1>Marcar horário</h1><div class="steps"><i class="on"></i><i class="${passo >= 2 ? "on" : ""}"></i><i class="${passo >= 3 ? "on" : ""}"></i></div>`;
   if (!semanaAtual()) h += `<p class="dim small">Semana de ${semLabel()}. Troca a semana lá em cima se quiser outra.</p>`;
   if (meus().length >= R().max_por_semana) h += `<div class="notice">⚠️ <div>Você já tem ${R().max_por_semana} presenças nesta semana, o máximo. Dá pra trocar uma em <a href="#meus">Meus</a>.</div></div>`;
   if (passo === 1) {
-    h += `<p class="dim">Onde você quer ficar?</p>` + (cfg().locais || []).map((l) => { const soz = P.filter((p) => p.local === l.id && p.sozinho >= PASSO && !passou(p)).length; return `<button class="opt" data-pick-local="${l.id}"><div class="ic" style="background:${esc(l.cor || "#1f6f8b")}">${l.icone || "📍"}</div><div><b>${esc(l.nome)}</b><span>${esc(l.janela || "")} · 📚 ${esc(l.carrinho || "")}</span>${soz ? `<span class="tag">${soz} pessoa(s) precisando de companhia</span>` : ""}</div><span class="arr">›</span></button>`; }).join("");
+    h += `<p class="dim">1. Em que lugar?</p>` + (cfg().locais || []).map((l) => { const soz = P.filter((p) => p.local === l.id && p.sozinho >= PASSO && !passou(p)).length; return `<button class="opt" data-pick-local="${l.id}"><div class="ic" style="background:${esc(l.cor || "#1f6f8b")}">${l.icone || "📍"}</div><div><b>${esc(l.nome)}</b><span>${esc(l.janela || "")} · 📚 ${esc(l.carrinho || "")}</span>${soz ? `<span class="tag">${soz} pessoa(s) precisando de companhia</span>` : ""}</div><span class="arr">›</span></button>`; }).join("");
   } else if (passo === 2) {
     const l = local(insc.local);
-    h += `<button class="opt on" data-pick-local=""><div class="ic" style="background:${esc(l.cor)}">${l.icone}</div><div><b>${esc(l.nome)}</b><span>trocar local</span></div><span class="arr">✎</span></button><p class="dim">Que dia?</p>`;
+    h += `<button class="opt on" data-pick-local=""><div class="ic" style="background:${esc(l.cor)}">${l.icone}</div><div><b>${esc(l.nome)}</b><span>trocar lugar</span></div><span class="arr">✎</span></button><p class="dim">2. Que dia?</p>`;
     const dias = [1, 2, 3, 4, 5, 6, 0].filter((d) => (l.dias || []).includes(d));
-    h += `<div class="days" style="grid-template-columns:repeat(${Math.min(7, Math.max(1, dias.length))},1fr)">${dias.map((d) => { const ps = P.filter((p) => p.local === l.id && p.dia === d); const g = ps.some((p) => p.sozinho >= PASSO); return `<button class="day${g ? " gap" : ""}${diaPassou(d) ? " off" : ""}" data-pick-dia="${d}"><span>${DIAS[d]}</span><b>${fmtD(dataDo(d))}</b><i>${ps.length ? ps.length + " pess." : "livre"}</i></button>`; }).join("")}</div>`;
+    h += dias.map((d) => { const ps = P.filter((p) => p.local === l.id && p.dia === d); const soz = ps.filter((p) => p.sozinho >= PASSO).length; return `<button class="diaBtn${diaPassou(d) ? " off" : ""}" data-pick-dia="${d}"><span style="width:52px;text-align:center"><span style="display:block;font-size:13px;color:var(--dim);text-transform:uppercase">${DIAS[d]}</span><span style="display:block;font-size:22px">${fmtD(dataDo(d))}</span></span>${DIAS_L[d]}<small>${soz ? "⚠️ " + soz + " sozinho" : ps.length ? ps.length + " pessoa" + (ps.length > 1 ? "s" : "") : "livre"}</small></button>`; }).join("");
   } else {
     const l = local(insc.local);
     h += `<button class="opt on" data-pick-dia=""><div class="ic" style="background:${esc(l.cor)}">${l.icone}</div><div><b>${esc(l.nome)} · ${DIAS_L[insc.dia]} ${fmtD(dataDo(insc.dia))} ${MESES[dataDo(insc.dia).getMonth()]}</b><span>trocar dia</span></div><span class="arr">✎</span></button>`;
-    h += `<div class="card" style="padding:10px 16px 4px">${linhaTempo(l, insc.dia)}${listaGrupos(grupos(l.id, insc.dia)) || `<div class="small dim" style="padding:0 0 10px">Ninguém ainda neste dia. Quem entrar primeiro puxa a dupla.</div>`}</div>`;
-    h += `<div class="card">${formHorario(l, insc.dia)}</div>`;
+    const gsDia = grupos(l.id, insc.dia);
+    if (gsDia.length) h += `<p class="dim small" style="margin:6px 0">Quem já vai nesse dia:</p><div class="card" style="padding:4px 16px">${listaGrupos(gsDia)}</div>`;
+    h += `<p class="dim">3. Que horas?</p><div class="card">${formHorario(l, insc.dia)}</div>`;
   }
   return h;
 }
@@ -488,12 +494,12 @@ function formHorario(l, dia, { ini, fim, fixo = false, pubId = null, titulo = ""
   if (ini == null) { ini = semanaAtual() && dia === hoje().getDay() ? Math.max(a, arred(agoraMin())) : Math.max(a, 9 * 60); if (ini >= b) ini = a; }
   if (fim == null) fim = Math.min(b, ini + 120);
   const ops = (sel, de, ate) => { let o = ""; for (let t = de; t <= ate; t += PASSO) o += `<option value="${t}" ${t === sel ? "selected" : ""}>${txt(t)}</option>`; return o; };
-  return `<form id="fh" data-fl="${l.id}" data-fd="${dia}" data-fp="${pubId || ""}">${titulo ? `<h3>${esc(titulo)}</h3>` : `<b>De que hora a que hora?</b>`}
+  return `<form id="fh" data-fl="${l.id}" data-fd="${dia}" data-fp="${pubId || ""}">${titulo ? `<h3>${esc(titulo)}</h3>` : ""}
     <div class="horas"><div class="f"><label>Início</label><select name="ini">${ops(ini, a, b - PASSO)}</select></div><div class="seta">→</div><div class="f"><label>Fim</label><select name="fim">${ops(fim, a + PASSO, b)}</select></div></div>
     <div class="dur">${[60, 90, 120, 180].map((d) => `<button type="button" data-dur="${d}" class="${fim - ini === d ? "on" : ""}">${curto(d)}</button>`).join("")}</div>
     <div class="previa" id="previa"></div>
     <label class="chk"><input type="checkbox" name="fixo" ${fixo ? "checked" : ""}> 🔁 Toda semana, neste dia e horário</label>
-    <div class="btns"><button class="btn" type="submit">${pubId ? "Colocar" : "Entrar"}</button></div></form>`;
+    <div class="btns"><button class="btn" type="submit">${pubId ? "Colocar" : "✅ Confirmar"}</button></div></form>`;
 }
 function previa() {
   const f = $("#fh"); if (!f) return;
@@ -534,14 +540,14 @@ document.addEventListener("submit", async (e) => {
 function telaMeus() {
   const ms = meus();
   let h = `<h1>Meus horários</h1><p class="dim">${ms.length} de ${R().max_por_semana} ${semanaAtual() ? "esta semana" : "na semana de " + semLabel()}</p>`;
-  if (!ms.length) h += `<div class="card"><p>Nenhum horário nesta semana.</p><a class="btn" href="#inscrever">＋ Entrar</a></div>`;
+  if (!ms.length) h += `<div class="card"><p>Nenhum horário nesta semana.</p><a class="btn" href="#inscrever">＋ Marcar meu horário</a></div>`;
   for (const p of ms) {
     const l = local(p.local), c = cart(l.carrinho);
     const dupla = [...new Set(P.filter((q) => q.local === p.local && q.dia === p.dia && q.pub !== EU.id && q.ini < p.fim && q.fim > p.ini).map((q) => `${pub(q.pub).nome} ${txt(q.ini)}–${txt(q.fim)}`))];
     const temChave = juntos(p.local, p.dia, p.ini).some((q) => pub(q.pub).responsavel);
     h += `<div class="card"><div class="row"><div style="width:44px;height:44px;border-radius:12px;background:${esc(l.cor)};display:grid;place-items:center;font-size:22px;color:#fff">${l.icone}</div><div class="grow"><b>${quando(p.dia, p.ini, p.fim)}</b><div class="small dim">${esc(l.nome)}${c ? " · " + esc(c.nome) : ""}${p.fixo ? ' · <span class="fx">🔁 toda semana</span>' : ""}</div></div>${p.sozinho >= PASSO ? `<span class="pill warn">só ${curto(p.sozinho)}</span>` : `<span class="pill ok">em dupla</span>`}</div>
       <div class="small dim" style="margin-top:8px">${dupla.length ? `Com ${esc(dupla.join(", "))}` : "Ainda ninguém com você. O grupo vai ver."}${!temChave ? " · ⚠️ ninguém com a chave do carrinho" : ""}</div>
-      <div class="mini"><button class="btn sec" data-grupo="${grupoDa(p).id}">Detalhes</button><button class="btn ghost" data-ajustar="${p.id}">✎ Ajustar</button><button class="btn ghost" data-sair="${p.id}">Sair</button></div></div>`;
+      <div class="btns"><button class="btn sec" data-grupo="${grupoDa(p).id}">Ver quem vai</button><button class="btn ghost" data-sair="${p.id}">Não vou</button></div></div>`;
   }
   const noMes = EU ? (S.mes[EU.id] || 0) : 0;
   h += `<h2>Seu mês</h2><div class="tile"><div class="card"><b>${noMes}</b><span>presenças no mês</span></div><div class="card"><b>${S.mes_horas ?? 0}h</b><span>de carrinho na congregação</span></div></div>`;
@@ -550,13 +556,14 @@ function telaMeus() {
 
 function telaMais() {
   const r = R(), ct = cfg().contato || {};
-  let h = `<h1>Mais</h1>`;
-  h += `<div class="card row"><div class="av">${EU ? iniciais(EU.nome) : "?"}</div><div class="grow"><b>${esc(EU ? EU.nome : "Sem nome")}</b><div class="small dim">${EU?.responsavel ? "🔑 tem a chave do carrinho" : "publicador"}</div></div><button class="btn sm ghost" data-trocar-eu="1">Trocar</button></div>`;
+  let h = `<h1>Organizar</h1><p class="dim small">Coisas de quem organiza. No dia a dia ninguém precisa entrar aqui.</p>`;
+  h += `<div class="card row"><div class="av">${EU ? iniciais(EU.nome) : "?"}</div><div class="grow"><b>${esc(EU ? EU.nome : "Sem nome")}</b><div class="small dim">${EU?.responsavel ? "🔑 tem a chave do carrinho" : "publicador"}</div></div><button class="btn sm ghost" data-trocar-eu="1">Não sou eu</button></div>`;
+  h += `<h2>Grupo do WhatsApp</h2><div class="card"><div class="mini" style="margin-top:0"><a class="btn wa" href="${wa(textoSozinhos(precisando()))}" target="_blank" rel="noopener">💬 Avisar quem está sozinho</a><a class="btn ghost" href="${wa(textoSemana())}" target="_blank" rel="noopener">💬 Mandar a escala da semana</a><button class="btn ghost" onclick="window.print()">🖨️ Imprimir</button></div></div>`;
   h += `<h2>Regras da congregação <button class="btn sm ghost" data-form="regras">Editar</button></h2><div class="card"><div class="rule"><span class="k">👥</span><div><b>Mínimo ${r.min_por_turno} juntos</b>, no máximo ${r.max_por_turno} ao mesmo tempo no mesmo local. Ninguém fica sozinho no carrinho.</div></div><div class="rule"><span class="k">⏱️</span><div><b>Horário livre</b>, de 15 em 15 minutos, dentro do horário do local. Marca só o que consegue de verdade.</div></div><div class="rule"><span class="k">🔁</span><div><b>Toda semana:</b> marca uma vez e vale até você parar. Numa semana que não der, é só sair daquela.</div></div><div class="rule"><span class="k">🔑</span><div><b>Um responsável por horário</b> pega e devolve o carrinho. Quem tem a chave aparece com 🔑.</div></div><div class="rule"><span class="k">📆</span><div><b>Até ${r.max_por_semana} presenças por semana</b> por pessoa, pra todo mundo participar.</div></div><div class="rule"><span class="k">🌧️</span><div><b>Chuva?</b> Qualquer um cancela o período aqui e todo mundo vê.</div></div></div>`;
   h += `<h2>Locais <button class="btn sm ghost" data-form="local" data-i="-1">＋ Adicionar</button></h2>` + (cfg().locais || []).map((l, i) => `<div class="card row"><div style="width:40px;height:40px;border-radius:10px;background:${esc(l.cor)};display:grid;place-items:center;font-size:20px;color:#fff">${l.icone}</div><div class="grow"><b>${esc(l.nome)}</b><div class="small dim">${esc(l.endereco || "sem endereço")}<br>${DIAS.filter((_, d) => (l.dias || []).includes(d)).join(", ")} · ${curto(abre(l))}–${curto(fecha(l))} · 📚 ${esc(l.carrinho || "")}</div></div>${l.mapa ? `<a class="btn sm ghost" href="${esc(l.mapa)}" target="_blank" rel="noopener">Mapa</a>` : ""}<button class="btn sm ghost" data-form="local" data-i="${i}">✎</button></div>`).join("");
   h += `<h2>Carrinhos <button class="btn sm ghost" data-form="carrinho" data-i="-1">＋ Adicionar</button></h2>` + (cfg().carrinhos || []).map((c, i) => `<div class="card"><div class="row"><span style="font-size:26px">📚</span><div class="grow"><b>${esc(c.nome)}</b><div class="small dim">Guardado: ${esc(c.guardado || "?")}</div></div><button class="btn sm ghost" data-form="carrinho" data-i="${i}">✎</button></div><div class="small dim" style="margin-top:8px">Responsável: ${esc(c.responsavel || "?")} · Leva: ${esc(c.publicacoes || "")}</div></div>`).join("");
   h += `<h2>Publicadores <span class="tag">${S.publicadores.length}</span></h2><div class="card"><div class="list">${S.publicadores.map((p) => `<div class="item"><div class="av">${iniciais(p.nome)}</div><div class="grow"><b>${esc(p.nome)}</b><span>${p.responsavel ? "🔑 responsável pelo carrinho" : "publicador"}</span></div><button class="btn sm ghost" data-chave="${p.id}" title="Chave do carrinho">${p.responsavel ? "🔑" : "🔒"}</button><button class="btn sm ghost" data-remover="${p.id}" aria-label="Remover">✕</button></div>`).join("") || `<p class="dim">Ninguém ainda.</p>`}</div><div class="mini"><button class="btn sec" data-form="novo-pub">＋ Cadastrar publicador</button></div></div>`;
-  h += `<h2>Semana</h2><div class="card"><div class="mini" style="margin-top:0"><a class="btn ghost" href="${wa(textoSemana())}" target="_blank" rel="noopener">💬 Enviar escala no grupo</a><button class="btn ghost" onclick="window.print()">🖨️ Imprimir</button></div><p class="small dim" style="margin:10px 0 0">${S.mes_horas ?? 0}h de carrinho no mês · ${precisando().length} pessoa(s) precisando de companhia nesta semana</p></div>`;
+  h += `<h2>Mês</h2><div class="card"><p class="small dim" style="margin:0">${S.mes_horas ?? 0}h de carrinho no mês · ${precisando().length} pessoa(s) precisando de companhia nesta semana</p></div>`;
   h += `<h2>Problemas e contato</h2><div class="card"><div class="small">Responsável: <b>${esc(ct.nome || "?")}</b> · WhatsApp ${esc(ct.whatsapp || "?")}</div><div class="mini"><button class="btn wa" data-problema="">⚠️ Avisar um problema</button><button class="btn ghost" data-form="contato">✎ Contato</button><button class="btn ghost" data-form="problemas">✎ Lista</button></div></div>`;
   h += `<h2>Porta e aparelho</h2><div class="card"><div class="mini" style="margin-top:0"><button class="btn ghost" data-form="senha">🔐 Trocar código da porta</button><button class="btn ghost" data-form="congregacao">✎ Nome da congregação</button><button class="btn ghost" data-sair-app="1">Sair deste aparelho</button></div></div>`;
   return h;
@@ -570,11 +577,11 @@ function abrirGrupo(id) {
   const temChave = g.pres.some((p) => pub(p.pub).responsavel);
   abrirSheet(`<div class="row"><div style="width:48px;height:48px;border-radius:14px;background:${esc(l.cor)};display:grid;place-items:center;font-size:24px;color:#fff">${l.icone}</div><div class="grow"><h3>${quando(g.dia, g.ini, g.fim)}</h3><div class="dim">${esc(l.nome)}${c ? " · " + esc(c.nome) : ""}</div></div><span class="pill ${s.k}">${s.txt}</span></div>
     ${g.cancelado ? `<div class="notice" style="margin-top:14px">🌧️ <div>Período cancelado: ${esc(g.cancelado)}.</div></div>` : ""}
-    <h2>Quem está</h2><div class="list">${g.pres.map((p) => `<div class="item"><div class="av">${iniciais(pub(p.pub).nome)}</div><div class="grow"><b>${esc(pub(p.pub).nome)}${p.pub === EU?.id ? " (você)" : ""}${p.fixo ? ' <span class="fx">🔁</span>' : ""}</b><span>${txt(p.ini)}–${txt(p.fim)}${pub(p.pub).responsavel ? " · 🔑 chave" : ""}${p.sozinho >= PASSO ? ` · <span style="color:var(--warn)">sozinho ${curto(p.sozinho)}</span>` : ""}</span></div>${!g.cancelado ? `<button class="btn sm ghost" data-ajustar="${p.id}" aria-label="Ajustar horário">✎</button><button class="btn sm ghost" data-sair="${p.id}" aria-label="Tirar">✕</button>` : ""}</div>`).join("")}${g.sozinho && !g.cancelado ? `<div class="item"><div class="av x">?</div><div class="grow"><b class="dim">Falta dupla</b><span>alguém precisa entrar nesse horário</span></div></div>` : ""}</div>
-    ${!temChave ? `<div class="notice" style="margin-top:12px">🔑 <div>Ninguém aqui tem a chave do carrinho. Um responsável precisa entrar ou combinar a entrega.</div></div>` : ""}
-    <h2>Carrinho e lugar</h2><div class="card"><div class="small">${c ? `<b>${esc(c.nome)}</b> · guardado: ${esc(c.guardado || "?")}<br>` : ""}${esc(l.endereco || "")}</div><div class="mini">${l.mapa ? `<a class="btn sm ghost" href="${esc(l.mapa)}" target="_blank" rel="noopener">📍 Como chegar</a>` : ""}${g.pres.some((p) => p.pub !== EU?.id) ? `<a class="btn sm ghost" href="${wa(`Oi! Vamos juntos no carrinho ${DIAS_L[g.dia]} ${txt(g.ini)}–${txt(g.fim)} na ${l.nome}. Combinamos?`)}" target="_blank" rel="noopener">💬 Falar com a dupla</a>` : ""}<button class="btn sm ghost" data-problema="${g.id}">⚠️ Problema</button></div></div>
-    ${!g.cancelado ? `<div class="mini" style="margin-top:2px"><button class="btn sec" data-colocar="${g.id}">＋ Colocar alguém</button></div>` : ""}
-    <div class="btns" style="margin-top:14px">${g.cancelado ? `<button class="btn sec" data-reabrir="${g.id}">Reabrir período</button>` : euAqui ? `<button class="btn danger" data-sair="${euAqui.id}">Sair</button>` : `<button class="btn" data-novo="${g.local}|${g.dia}|${g.ini}|${g.fim}">Entrar ${txt(g.ini)}–${txt(g.fim)}</button>`}${!g.cancelado ? `<button class="btn ghost" data-cancel="${g.id}">🌧️ Cancelar</button>` : ""}</div>`);
+    <h2>Quem vai</h2><div class="list">${g.pres.map((p) => `<div class="item"><div class="av">${iniciais(pub(p.pub).nome)}</div><div class="grow"><b>${esc(pub(p.pub).nome)}${p.pub === EU?.id ? " (você)" : ""}${p.fixo ? ' <span class="fx">🔁</span>' : ""}</b><span>${txt(p.ini)}–${txt(p.fim)}${pub(p.pub).responsavel ? " · 🔑 chave" : ""}${p.sozinho >= PASSO ? ` · <span style="color:var(--warn)">sozinho ${curto(p.sozinho)}</span>` : ""}</span></div></div>`).join("")}${g.sozinho && !g.cancelado ? `<div class="item"><div class="av x">?</div><div class="grow"><b class="dim">Falta dupla</b><span>alguém precisa entrar nesse horário</span></div></div>` : ""}</div>
+    ${!temChave ? `<div class="notice" style="margin-top:12px">🔑 <div>Ninguém aqui tem a chave do carrinho.</div></div>` : ""}
+    ${(c && c.guardado) || l.endereco ? `<p class="small dim" style="margin:10px 0 0">${c && c.guardado ? `📚 ${esc(c.nome)}: ${esc(c.guardado)}` : ""}${l.endereco ? `<br>📍 ${esc(l.endereco)}` : ""}</p>` : ""}
+    <div class="btns" style="margin-top:14px">${g.cancelado ? `<button class="btn sec" data-reabrir="${g.id}">Reabrir período</button>` : euAqui ? `<button class="btn danger" data-sair="${euAqui.id}">Não vou</button>` : `<button class="btn" data-novo="${g.local}|${g.dia}|${g.ini}|${g.fim}">✅ Eu vou ${txt(g.ini)}–${txt(g.fim)}</button>`}</div>
+    <details class="mais"><summary>Mais opções ▾</summary><div class="mini" style="margin-top:0">${!g.cancelado ? `<button class="btn ghost" data-colocar="${g.id}">＋ Colocar alguém</button>` : ""}${!g.cancelado ? g.pres.map((p) => `<button class="btn ghost" data-ajustar="${p.id}">✎ ${esc(pub(p.pub).nome.split(" ")[0])}</button><button class="btn ghost" data-sair="${p.id}">✕ ${esc(pub(p.pub).nome.split(" ")[0])}</button>`).join("") : ""}${l.mapa ? `<a class="btn ghost" href="${esc(l.mapa)}" target="_blank" rel="noopener">📍 Como chegar</a>` : ""}${g.pres.some((p) => p.pub !== EU?.id) ? `<a class="btn ghost" href="${wa(`Oi! Vamos juntos no carrinho ${DIAS_L[g.dia]} ${txt(g.ini)}–${txt(g.fim)} na ${l.nome}. Combinamos?`)}" target="_blank" rel="noopener">💬 Falar com a dupla</a>` : ""}<button class="btn ghost" data-problema="${g.id}">⚠️ Problema</button>${!g.cancelado ? `<button class="btn ghost" data-cancel="${g.id}">🌧️ Cancelar por chuva</button>` : ""}</div></details>`);
 }
 function colocarAlguem(gid) {
   const g = grupoDe(gid); if (!g) return;
@@ -593,9 +600,9 @@ function escolhaSair(pid) {
   const l = local(p.local); const eu = p.pub === EU?.id; const nome = eu ? "Você" : pub(p.pub).nome;
   const base = esc(JSON.stringify({ local: p.local, dia: p.dia, hora: p.hora, publicador_id: p.pub }));
   if (!p.fixo) {
-    abrirSheet(`<h3>${eu ? "Sair deste horário?" : `Tirar ${esc(nome)}?`}</h3><p class="dim small">${quando(p.dia, p.ini, p.fim)} · ${esc(l.nome)}</p><div class="btns"><button class="btn danger" data-acao="sair" data-p="${base}">${eu ? "Sair" : "Tirar"}</button><button class="btn ghost" data-fechar="1">Voltar</button></div>`);
+    abrirSheet(`<h3>${eu ? "Não vai mais?" : `Tirar ${esc(nome)}?`}</h3><p class="dim small">${quando(p.dia, p.ini, p.fim)} · ${esc(l.nome)}</p><div class="btns" style="flex-direction:column"><button class="btn danger" data-acao="sair" data-p="${base}">${eu ? "Isso, não vou" : "Tirar"}</button><button class="btn ghost" data-fechar="1">Voltar</button></div>`);
   } else {
-    abrirSheet(`<h3>${esc(nome)} está fixo aqui 🔁</h3><p class="dim small">${quando(p.dia, p.ini, p.fim)} · ${esc(l.nome)}, toda semana.</p><div class="btns" style="flex-direction:column"><button class="btn sec" data-acao="sair" data-p="${base}">Faltar só nesta semana</button><button class="btn danger" data-acao="desfixar" data-p="${base}">Parar de vez, desta semana em diante</button><button class="btn ghost" data-fechar="1">Voltar</button></div>`);
+    abrirSheet(`<h3>${esc(nome)} está fixo aqui 🔁</h3><p class="dim small">${quando(p.dia, p.ini, p.fim)} · ${esc(l.nome)}, toda semana.</p><div class="btns" style="flex-direction:column"><button class="btn sec" data-acao="sair" data-p="${base}">Só nesta semana não vou</button><button class="btn danger" data-acao="desfixar" data-p="${base}">Parar de vez</button><button class="btn ghost" data-fechar="1">Voltar</button></div>`);
   }
 }
 function problema(gid) {
@@ -674,7 +681,7 @@ function render() {
   const r = rota();
   $("#view").innerHTML = TELAS[r]();
   document.querySelectorAll("#nav a").forEach((a) => a.classList.toggle("on", a.dataset.r === r));
-  $("#topSub").textContent = { hoje: "Testemunho público · hoje", agenda: "Semana de " + fmtD(dataDo(1)) + " a " + fmtD(dataDo(0)), inscrever: "Local, dia e horário", meus: "Seus horários e seu mês", mais: "Regras, locais, carrinhos" }[r];
+  $("#topSub").textContent = { hoje: "Testemunho público", agenda: "Quem vai, dia a dia", inscrever: "Lugar, dia e hora", meus: EU ? EU.nome : "Seus horários", mais: "Só pra quem organiza" }[r];
   $("#semLabel").textContent = semLabel();
   if (r === "inscrever" && $("#fh")) previa();
   window.scrollTo(0, 0);
@@ -712,7 +719,6 @@ document.addEventListener("click", async (e) => {
     else if (d.dur) { const f = $("#fh"); const ini = Number(f.elements.ini.value); const l = local(f.dataset.fl); f.elements.fim.value = Math.min(fecha(l), ini + Number(d.dur)); previa(); }
   } catch (err) { /* já avisado no toast */ }
 });
-$("#topAv").addEventListener("click", () => { location.hash = "#mais"; });
 
 // ---------- início
 (async () => {
