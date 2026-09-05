@@ -65,4 +65,9 @@ você clica.
 
 ## Deploy
 
-Projeto `congregacaonova` na Vercel, arquivo `index.html` na raiz.
+Projeto `congregacao-nova` na Vercel, ligado a este repositório: todo push
+em `main` publica sozinho (produção), e todo push em outra branch gera uma
+prévia. Não há build: o `index.html` da raiz é servido como está.
+
+O projeto antigo `congregacaonova` (publicado à mão) fica até o domínio
+`congregacaonova.vercel.app` ser apontado para o novo, no painel da Vercel.
