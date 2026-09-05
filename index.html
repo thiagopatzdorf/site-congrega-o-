@@ -129,7 +129,7 @@ p{margin:0 0 10px}
 .sheet.open{transform:none}
 .sheet .grab{width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 14px}
 .sheet h3{margin:0 0 2px;font-size:18px;font-weight:700;line-height:1.25}
-.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;font-size:14px;z-index:30;opacity:0;transition:.25s;max-width:calc(100% - 36px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.toast{pointer-events:none;position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;font-size:14px;z-index:30;opacity:0;transition:.25s;max-width:calc(100% - 36px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.25)}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 .hero{background:linear-gradient(135deg,var(--acc),#155a72);color:#fff;border-radius:20px;padding:18px;margin:8px 0 14px;position:relative;overflow:hidden}
 .hero::after{content:"";position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.08)}
@@ -341,12 +341,14 @@ function telaHoje() {
   } else {
     h += `<div class="hero"><div class="k">${semanaAtual() ? "Esta semana" : semLabel()}</div><b>Você ainda não tem turno</b><p>Leva um minuto: escolhe o local, o dia e a hora.</p><div class="btns"><a class="btn" href="#inscrever">＋ Inscrever-me</a></div></div>`;
   }
-  const faltando = gaps().filter((t) => !passouTurno(t));
-  if (faltando.length) {
-    h += `<h2>Precisa de gente <span class="tag">${faltando.length} turnos</span></h2><div class="card" style="padding:4px 16px">`;
-    for (const t of faltando.slice(0, 5)) { const l = local(t.local); h += `<div class="turno"><div class="h">${t.hora}<small>${DIAS[t.dia]} ${fmtD(dataDo(t.dia))}</small></div><div class="who"><div class="n">${l.icone} <b>${esc(l.apelido || l.nome)}</b> · ${nomes(t)}</div></div>${t.quem.includes(EU?.id) ? `<span class="pill ok">você</span>` : `<button class="btn sm sec" data-join="${t.id}">Eu vou</button>`}</div>`; }
-    h += `</div>`;
+  const sozinhos = gaps().filter((t) => t.quem.length > 0 && !passouTurno(t));
+  const vagos = gaps().filter((t) => t.quem.length === 0 && !passouTurno(t));
+  if (sozinhos.length) {
+    h += `<h2>Precisando de companhia <span class="tag">${sozinhos.length}</span></h2><div class="card" style="padding:4px 16px">`;
+    for (const t of sozinhos) { const l = local(t.local); const souEu = t.quem.includes(EU?.id); h += `<div class="turno"><div class="h">${t.hora}<small>${DIAS[t.dia]} ${fmtD(dataDo(t.dia))}</small></div><div class="who"><div class="n">${nomes(t)}</div><div class="small dim">${l.icone} ${esc(l.apelido || l.nome)} · ${t.hora}–${t.fim}${souEu ? " · é você, sozinho" : ""}</div></div>${souEu ? `<button class="btn sm ghost" data-open="${t.id}">＋ Colocar</button>` : `<button class="btn sm sec" data-join="${t.id}">Eu vou</button>`}</div>`; }
+    h += `</div><div class="mini" style="margin-top:0"><a class="btn ghost" href="${wa(textoSozinhos(sozinhos))}" target="_blank" rel="noopener">💬 Avisar no grupo quem está sozinho</a></div>`;
   }
+  if (vagos.length) h += `<h2>Turnos vagos <span class="tag">${vagos.length}</span></h2><div class="card row"><div class="grow small dim">Ninguém ainda em ${vagos.length} turnos ${semanaAtual() ? "até o fim da semana" : "nesta semana"}.</div><a class="btn sm sec" href="#agenda">Ver agenda</a></div>`;
   h += `<h2>Carrinhos agora</h2>`;
   for (const c of cfg().carrinhos || []) {
     const emUso = doDia.find((t) => local(t.local)?.carrinho === c.id && t.quem.length && t.hora <= hh() && t.fim > hh());
@@ -379,6 +381,12 @@ function telaAgenda() {
   h += lista.length ? listaPorLocal(lista) : `<div class="card dim">Sem turnos ${DIAS_L[agDia]}${agLocal !== "todos" ? " neste local" : ""}.</div>`;
   h += `<div class="mini"><a class="btn ghost" href="${wa(textoSemana())}" target="_blank" rel="noopener">💬 Mandar a semana no grupo</a><button class="btn ghost" onclick="window.print()">🖨️ Imprimir</button></div>`;
   return h;
+}
+function textoSozinhos(lista) {
+  let s = `*Precisando de companhia no carrinho · ${cfg().congregacao}*\n`;
+  for (const t of lista) s += `• ${DIAS_L[t.dia]} ${fmtD(dataDo(t.dia))} ${t.hora}–${t.fim}, ${local(t.local).apelido || local(t.local).nome}: ${t.quem.map((id) => pub(id).nome).join(" e ")} sozinho(a)\n`;
+  s += `\nQuem puder, entra em ${location.origin}${location.pathname}`;
+  return s;
 }
 function textoSemana() {
   const a = deIso(semana);
@@ -448,10 +456,18 @@ function abrir(id) {
   const dupla = t.quem.filter((x) => x !== EU?.id);
   abrirSheet(`<div class="row"><div style="width:48px;height:48px;border-radius:14px;background:${esc(l.cor)};display:grid;place-items:center;font-size:24px;color:#fff">${l.icone}</div><div class="grow"><h3>${quando(t)}</h3><div class="dim">${esc(l.nome)}${c ? " · " + esc(c.nome) : ""}</div></div><span class="pill ${s.k}">${s.txt}</span></div>
     ${t.cancelado ? `<div class="notice" style="margin-top:14px">🌧️ <div>Turno cancelado: ${esc(t.cancelado)}.</div></div>` : ""}
-    <h2>Quem vai</h2><div class="list">${t.quem.map((id) => `<div class="item"><div class="av">${iniciais(pub(id).nome)}</div><div class="grow"><b>${esc(pub(id).nome)}${id === EU?.id ? " (você)" : ""}</b><span>${pub(id).responsavel ? "🔑 responsável pelo carrinho" : "publicador"}</span></div></div>`).join("")}${Array.from({ length: Math.max(0, R().min_por_turno - t.quem.length) }).map(() => `<div class="item"><div class="av x">?</div><div class="grow"><b class="dim">Vaga aberta</b><span>alguém precisa entrar</span></div></div>`).join("")}</div>
+    <h2>Quem vai</h2><div class="list">${t.quem.map((id) => `<div class="item"><div class="av">${iniciais(pub(id).nome)}</div><div class="grow"><b>${esc(pub(id).nome)}${id === EU?.id ? " (você)" : ""}</b><span>${pub(id).responsavel ? "🔑 responsável pelo carrinho" : "publicador"}</span></div>${id !== EU?.id && !t.cancelado ? `<button class="btn sm ghost" data-tirar="${t.id}|${id}" aria-label="Tirar do turno">✕</button>` : ""}</div>`).join("")}${Array.from({ length: Math.max(0, R().min_por_turno - t.quem.length) }).map(() => `<div class="item"><div class="av x">?</div><div class="grow"><b class="dim">Vaga aberta</b><span>alguém precisa entrar</span></div></div>`).join("")}</div>
     ${!temResp(t) && t.quem.length ? `<div class="notice" style="margin-top:12px">🔑 <div>Ninguém neste turno tem a chave do carrinho. Um responsável precisa entrar ou combinar a entrega.</div></div>` : ""}
     <h2>Carrinho e lugar</h2><div class="card"><div class="small">${c ? `<b>${esc(c.nome)}</b> · guardado: ${esc(c.guardado || "?")}<br>` : ""}${esc(l.endereco || "")}</div><div class="mini">${l.mapa ? `<a class="btn sm ghost" href="${esc(l.mapa)}" target="_blank" rel="noopener">📍 Como chegar</a>` : ""}${dupla.length ? `<a class="btn sm ghost" href="${wa(`Oi! Somos dupla no carrinho ${DIAS_L[t.dia]} ${t.hora} na ${l.nome}. Combinamos?`)}" target="_blank" rel="noopener">💬 Falar com a dupla</a>` : ""}<button class="btn sm ghost" data-problema="${t.id}">⚠️ Problema</button></div></div>
+    ${!t.cancelado && !cheio ? `<div class="mini" style="margin-top:2px"><button class="btn sec" data-colocar="${t.id}">＋ Colocar alguém neste turno</button></div>` : ""}
     <div class="btns" style="margin-top:14px">${t.cancelado ? `<button class="btn sec" data-reabrir="${t.id}">Reabrir turno</button>` : ja ? `<button class="btn danger" data-leave="${t.id}">Sair do turno</button>` : cheio ? `<button class="btn ghost" disabled>Turno cheio</button>` : `<button class="btn" data-join="${t.id}">Entrar neste turno</button>`}${!t.cancelado ? `<button class="btn ghost" data-cancel="${t.id}">🌧️ Cancelar</button>` : ""}</div>`);
+}
+function colocarAlguem(turnoId) {
+  const t = turnos.find((x) => x.id === turnoId); if (!t) return;
+  const l = local(t.local);
+  const livres = S.publicadores.filter((p) => !t.quem.includes(p.id));
+  const lista = livres.map((p) => `<button class="pessoa" data-colocar-pub="${t.id}|${p.id}"><span class="av">${iniciais(p.nome)}</span><span>${esc(p.nome)}${p.responsavel ? " <small class=\"dim\">🔑</small>" : ""}</span></button>`).join("");
+  abrirSheet(`<h3>Colocar alguém</h3><p class="dim small">${quando(t)} · ${esc(l.nome)}. Combine com a pessoa antes.</p><div style="margin:14px 0">${lista || `<p class="dim">Todo mundo cadastrado já está neste turno.</p>`}</div><div class="mini"><button class="btn ghost" data-form="novo-pub">＋ Cadastrar alguém novo</button><button class="btn ghost" data-open="${t.id}">Voltar</button></div>`);
 }
 function problema(turnoId) {
   const t = turnos.find((x) => x.id === turnoId); const ct = cfg().contato || {};
@@ -530,6 +546,17 @@ async function entrar(id) {
   toast(t2.quem.length >= R().min_por_turno ? `✅ Confirmado: ${DIAS_L[t.dia]} ${t.hora}, ${l.apelido || l.nome}` : `✅ Inscrito. Falta uma dupla, o grupo vai ver.`);
   fechar(true); insc = { local: null, dia: null }; location.hash = "#meus";
 }
+async function colocar(turnoId, pubId) {
+  const t = turnos.find((x) => x.id === turnoId), p = pub(pubId); if (!t || !p) return;
+  await acao("entrar", { local: t.local, dia: t.dia, hora: t.hora, publicador_id: p.id });
+  toast(`✅ ${p.nome} está no turno ${DIAS_L[t.dia]} ${t.hora}`); abrir(turnoId);
+}
+async function tirar(turnoId, pubId) {
+  const t = turnos.find((x) => x.id === turnoId), p = pub(pubId); if (!t || !p) return;
+  if (!confirm(`Tirar ${p.nome} deste turno?`)) return;
+  await acao("sair", { local: t.local, dia: t.dia, hora: t.hora, publicador_id: p.id });
+  toast(`${p.nome} saiu do turno. Avisa a pessoa 💬`); abrir(turnoId);
+}
 async function sair(id) { const t = turnos.find((x) => x.id === id); if (!t || !EU) return; await acao("sair", { local: t.local, dia: t.dia, hora: t.hora, publicador_id: EU.id }); toast("Você saiu do turno. Avisa a dupla 💬"); fechar(true); }
 async function cancelar(id) { const t = turnos.find((x) => x.id === id); if (!t) return; const motivo = prompt("Motivo (ex.: chuva prevista)", "chuva prevista"); if (motivo === null) return; await acao("cancelar", { local: t.local, dia: t.dia, hora: t.hora, motivo }); toast("Turno cancelado; todo mundo vê."); fechar(true); }
 async function reabrir(id) { const t = turnos.find((x) => x.id === id); if (!t) return; await acao("reabrir", { local: t.local, dia: t.dia, hora: t.hora }); toast("Turno reaberto."); fechar(true); }
@@ -548,7 +575,7 @@ function render() {
 }
 window.addEventListener("hashchange", () => { if (rota() === "hoje" && !semanaAtual()) carregar(segunda(hoje())); else render(); });
 document.addEventListener("click", async (e) => {
-  const el = e.target.closest("[data-open],[data-join],[data-leave],[data-cancel],[data-reabrir],[data-loc],[data-dia],[data-pick-local],[data-pick-dia],[data-eu],[data-form],[data-chave],[data-remover],[data-trocar-eu],[data-sair],[data-sem],[data-problema],[data-wa-problema],[data-fechar]");
+  const el = e.target.closest("[data-open],[data-join],[data-leave],[data-cancel],[data-reabrir],[data-loc],[data-dia],[data-pick-local],[data-pick-dia],[data-eu],[data-form],[data-chave],[data-remover],[data-trocar-eu],[data-sair],[data-sem],[data-problema],[data-wa-problema],[data-fechar],[data-colocar],[data-colocar-pub],[data-tirar]");
   if (!el) { if (e.target === $("#sheetBg")) fechar(); return; }
   const d = el.dataset;
   try {
@@ -571,6 +598,9 @@ document.addEventListener("click", async (e) => {
     else if ("problema" in d) problema(d.problema);
     else if (d.waProblema) { const ct = cfg().contato || {}; const msg = `${d.waProblema}${d.ctx || ""}. — ${EU ? EU.nome : "publicador"}, ${cfg().congregacao}`; window.open(wa(msg, ct.whatsapp), "_blank", "noopener"); fechar(true); }
     else if (d.fechar) fechar(true);
+    else if (d.colocar) colocarAlguem(d.colocar);
+    else if (d.colocarPub) { const [tid, pid] = d.colocarPub.split("|"); await colocar(tid, pid); }
+    else if (d.tirar) { const [tid, pid] = d.tirar.split("|"); await tirar(tid, pid); }
   } catch (err) { /* já avisado no toast */ }
 });
 $("#topAv").addEventListener("click", () => { location.hash = "#mais"; });
